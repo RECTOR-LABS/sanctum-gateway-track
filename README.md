@@ -16,10 +16,14 @@ This workspace contains everything you need to participate in the Sanctum Gatewa
 ```
 sanctum-gateway-track/
 ├── README.md                    # This file - workspace overview
-├── hackathon-original.md        # Original hackathon content (reference)
-├── hackathon-analysis.md        # Comprehensive analysis & winning strategies
-├── TRACK-REQUIREMENTS.md        # Checklist of all requirements
-├── TIMELINE.md                  # Day-by-day timeline with milestones
+├── CLAUDE.md                    # AI assistant guidance
+├── docs/                        # Project documentation
+│   ├── PRD.md                   # Product Requirements Document (Epic → Story → Task)
+│   ├── EXECUTION-PLAN.md        # Progress tracker with daily logs
+│   ├── TIMELINE.md              # Day-by-day timeline with milestones
+│   ├── TRACK-REQUIREMENTS.md    # Checklist of all requirements
+│   ├── hackathon-analysis.md    # Comprehensive analysis & winning strategies
+│   └── hackathon-original.md    # Original hackathon content (reference)
 ├── resources/                   # Related resources
 │   ├── official-docs/          # Gateway documentation backups
 │   ├── starter-kits/           # Starter code and templates
@@ -31,12 +35,25 @@ sanctum-gateway-track/
 
 ## 📚 Documentation Guide
 
-### 1. Start Here: [hackathon-original.md](./hackathon-original.md)
+### 1. Start Here: [docs/hackathon-original.md](./docs/hackathon-original.md)
 - Exact copy of hackathon listing from Superteam Earn
 - Prize structure and basic requirements
 - Official rules and contact information
 
-### 2. Read This: [hackathon-analysis.md](./hackathon-analysis.md)
+### 2. Plan & Execute: [docs/PRD.md](./docs/PRD.md) + [docs/EXECUTION-PLAN.md](./docs/EXECUTION-PLAN.md)
+**NEW: Comprehensive planning documents:**
+- **PRD.md**: Product Requirements Document
+  - 6 Epics → 18 Stories → 95+ Tasks
+  - Complete Epic → Story → Task hierarchy
+  - Time estimates for every task
+  - Technical architecture and dependencies
+- **EXECUTION-PLAN.md**: Progress Tracker
+  - Real-time task tracking with status
+  - Daily progress logs (22-day template)
+  - Blocker and risk registry
+  - Metrics and KPIs tracking
+
+### 3. Read Strategy: [docs/hackathon-analysis.md](./docs/hackathon-analysis.md)
 **Comprehensive 16-section strategic analysis:**
 - Deep dive into Gateway technology
 - Competition analysis (currently 0 submissions!)
@@ -47,7 +64,7 @@ sanctum-gateway-track/
 - Risk assessment & mitigation strategies
 - Documentation & social proof strategy
 
-### 3. Use Daily: [TRACK-REQUIREMENTS.md](./TRACK-REQUIREMENTS.md)
+### 4. Use Daily: [docs/TRACK-REQUIREMENTS.md](./docs/TRACK-REQUIREMENTS.md)
 **Complete checklist including:**
 - Mandatory requirements (must complete to qualify)
 - Recommended requirements (to increase winning chances)
@@ -56,7 +73,7 @@ sanctum-gateway-track/
 - Differentiation strategies
 - Pre-submission checklist
 
-### 4. Follow Daily: [TIMELINE.md](./TIMELINE.md)
+### 5. Follow Daily: [docs/TIMELINE.md](./docs/TIMELINE.md)
 **22-day detailed timeline:**
 - Week 1: Core Gateway integration
 - Week 2: Dashboard & visualization
@@ -128,7 +145,7 @@ To qualify for prizes, you MUST:
 - Alert system for failures
 - ML-based success predictions (innovation layer)
 
-See [hackathon-analysis.md](./hackathon-analysis.md) for full implementation details.
+See [docs/hackathon-analysis.md](./docs/hackathon-analysis.md) for full implementation details.
 
 ---
 
@@ -279,7 +296,7 @@ By completing this hackathon, you will:
 3. [ ] Create analytics API
 4. [ ] Document progress
 
-**Refer to [TIMELINE.md](./TIMELINE.md) for detailed daily breakdown.**
+**Refer to [docs/TIMELINE.md](./docs/TIMELINE.md) and [docs/EXECUTION-PLAN.md](./docs/EXECUTION-PLAN.md) for detailed daily breakdown.**
 
 ---
 
@@ -291,9 +308,11 @@ By completing this hackathon, you will:
 - **Submission Process**: Check Superteam Earn platform
 
 ### Need Help?
-- Review [hackathon-analysis.md](./hackathon-analysis.md) for detailed strategy
-- Check [TRACK-REQUIREMENTS.md](./TRACK-REQUIREMENTS.md) for requirements
-- Follow [TIMELINE.md](./TIMELINE.md) for daily guidance
+- Review [docs/PRD.md](./docs/PRD.md) for Epic/Story/Task breakdown
+- Track progress in [docs/EXECUTION-PLAN.md](./docs/EXECUTION-PLAN.md)
+- Review [docs/hackathon-analysis.md](./docs/hackathon-analysis.md) for detailed strategy
+- Check [docs/TRACK-REQUIREMENTS.md](./docs/TRACK-REQUIREMENTS.md) for requirements
+- Follow [docs/TIMELINE.md](./docs/TIMELINE.md) for daily guidance
 
 ---
 

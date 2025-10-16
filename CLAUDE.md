@@ -17,10 +17,14 @@ This workspace is set up to participate in the Colosseum Cypherpunk Hackathon - 
 ```
 sanctum-gateway-track/
 ├── README.md                    # Project overview and quick start
-├── TRACK-REQUIREMENTS.md        # Complete requirements checklist
-├── TIMELINE.md                  # 22-day day-by-day timeline
-├── hackathon-original.md        # Original hackathon listing (reference)
-├── hackathon-analysis.md        # Comprehensive strategy analysis (16 sections)
+├── CLAUDE.md                    # AI assistant guidance (this file)
+├── docs/                        # Project documentation
+│   ├── PRD.md                   # Product Requirements Document (Epic → Story → Task)
+│   ├── EXECUTION-PLAN.md        # Progress tracker with daily logs
+│   ├── TIMELINE.md              # 22-day day-by-day timeline
+│   ├── TRACK-REQUIREMENTS.md    # Complete requirements checklist
+│   ├── hackathon-analysis.md    # Comprehensive strategy analysis (16 sections)
+│   └── hackathon-original.md    # Original hackathon listing (reference)
 ├── resources/                   # Reference materials
 │   ├── RESOURCES.md
 │   ├── official-docs/          # Gateway documentation backups
@@ -221,7 +225,7 @@ CRITICAL for hackathon success:
 
 ## Implementation Timeline Awareness
 
-Refer to `TIMELINE.md` for detailed daily breakdown. Key milestones:
+Refer to `docs/TIMELINE.md` for detailed daily breakdown. Key milestones:
 
 - **Days 1-7 (Week 1)**: Core Gateway integration + data layer
 - **Days 8-14 (Week 2)**: Dashboard + visualizations
@@ -313,9 +317,11 @@ The hackathon judges want to see clear demonstration of what would be "hard or i
 
 ### Essential Reading (In Order)
 1. **README.md** - Start here for project overview
-2. **hackathon-analysis.md** - Complete strategy (16 sections)
-3. **TRACK-REQUIREMENTS.md** - Requirements checklist
-4. **TIMELINE.md** - Day-by-day execution plan
+2. **docs/PRD.md** - Product Requirements Document (Epic → Story → Task breakdown)
+3. **docs/EXECUTION-PLAN.md** - Progress tracker with daily logs
+4. **docs/hackathon-analysis.md** - Complete strategy (16 sections)
+5. **docs/TRACK-REQUIREMENTS.md** - Requirements checklist
+6. **docs/TIMELINE.md** - Day-by-day execution plan
 
 ### Gateway Documentation
 - Official docs: https://gateway.sanctum.so/docs
@@ -346,7 +352,7 @@ This repository contains **planning documentation only**. There is NO source cod
 
 ### Time Pressure Management
 - 22 days total, already on Day 1
-- Follow TIMELINE.md religiously
+- Follow docs/TIMELINE.md religiously
 - If behind schedule, cut innovation features FIRST
 - Core integration + basic dashboard + solid docs beats ambitious incomplete project
 
@@ -363,7 +369,8 @@ This repository contains **planning documentation only**. There is NO source cod
 - MVP-first: Core features Week 1, polish Weeks 2-3
 - Test continuously, not at the end
 - Document as you build
-- Daily progress check-ins against TIMELINE.md
+- Daily progress check-ins against docs/TIMELINE.md and docs/EXECUTION-PLAN.md
+- Update EXECUTION-PLAN.md daily with completed tasks
 - Be ready to simplify scope if necessary
 
 ---

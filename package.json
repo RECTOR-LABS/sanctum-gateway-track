@@ -1,0 +1,24 @@
+{
+  "name": "gateway-insights",
+  "version": "1.0.0",
+  "description": "Gateway Insights - Transaction Analytics Platform for Sanctum Gateway",
+  "private": true,
+  "scripts": {
+    "dev:backend": "npm run dev --prefix src/backend",
+    "dev:frontend": "npm run dev --prefix src/frontend",
+    "dev": "npm run dev:backend & npm run dev:frontend",
+    "build:backend": "npm run build --prefix src/backend",
+    "build:frontend": "npm run build --prefix src/frontend",
+    "build": "npm run build:backend && npm run build:frontend",
+    "type-check": "npm run type-check --prefix src/backend && npm run type-check --prefix src/frontend",
+    "lint": "eslint .",
+    "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\""
+  },
+  "keywords": ["solana", "gateway", "sanctum", "analytics", "hackathon"],
+  "author": "RECTOR",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^9.18.0",
+    "prettier": "^3.4.2"
+  }
+}

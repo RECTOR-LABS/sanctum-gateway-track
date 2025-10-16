@@ -1,0 +1,61 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+*.log
+
+# Production builds
+build/
+dist/
+.next/
+out/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# TypeScript
+*.tsbuildinfo
+
+# Database
+*.db
+*.sqlite
+
+# Misc
+.turbo
+.vercel
+
+# Wallets & Keypairs (NEVER COMMIT!)
+*-wallet.json
+*.key
+*.keypair
+# Allow package.json and tsconfig.json but block other root JSONs (keypairs)
+/*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+!jsconfig.json
+!.eslintrc.json

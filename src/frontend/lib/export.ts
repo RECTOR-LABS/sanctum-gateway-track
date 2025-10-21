@@ -82,11 +82,16 @@ function downloadBlob(blob: Blob, filename: string): void {
 /**
  * Export chart as PNG image using html2canvas
  * Note: Requires html2canvas library to be installed
+ * This feature is currently disabled until html2canvas is added to dependencies
  */
 export async function exportChartAsPNG(
   elementId: string,
   filename: string
 ): Promise<void> {
+  console.warn('Chart PNG export requires html2canvas library. Run: npm install html2canvas');
+  throw new Error('PNG export not available. Install html2canvas to enable this feature.');
+
+  /* Uncomment when html2canvas is installed:
   try {
     // Dynamically import html2canvas only when needed
     const html2canvas = (await import('html2canvas')).default;
@@ -111,6 +116,7 @@ export async function exportChartAsPNG(
     console.error('Failed to export chart:', error);
     throw error;
   }
+  */
 }
 
 /**

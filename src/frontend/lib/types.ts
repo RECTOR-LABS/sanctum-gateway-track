@@ -67,6 +67,11 @@ export interface DeliveryMethodMetrics {
   total_cost_sol: number;
   avg_response_time_ms: number;
   avg_confirmation_time_ms: number | null;
+  min_response_time_ms?: number;
+  max_response_time_ms?: number;
+  p50_response_time_ms?: number;
+  p95_response_time_ms?: number;
+  p99_response_time_ms?: number;
 }
 
 export interface TrendDataPoint {

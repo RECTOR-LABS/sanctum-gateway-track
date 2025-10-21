@@ -10,6 +10,7 @@
     "start": "node dist/index.js",
     "type-check": "tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "test:epic2": "tsx test-epic2-integration.ts",
     "db:test": "tsx database/test-connection.ts",
     "db:migrate": "tsx database/migrate.ts",
     "db:migrate:status": "tsx database/migrate.ts status"

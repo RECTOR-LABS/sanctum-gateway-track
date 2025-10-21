@@ -128,7 +128,7 @@ class APIClient {
   }
 
   async getTrends(
-    type: 'transactions' | 'success_rate' | 'cost',
+    type: 'transactions' | 'success_rate' | 'cost' | 'volume',
     interval: 'hour' | 'day' = 'hour',
     deliveryMethod?: string,
     startDate?: string,
@@ -162,6 +162,14 @@ class APIClient {
     );
 
     return response.data;
+  }
+
+  // Alias for getDeliveryMethodBreakdown (used in analytics page)
+  async getMethodMetrics(
+    startDate?: string,
+    endDate?: string
+  ): Promise<DeliveryMethodMetrics[]> {
+    return this.getDeliveryMethodBreakdown(startDate, endDate);
   }
 
   async getTopErrors(

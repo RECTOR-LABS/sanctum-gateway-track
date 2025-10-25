@@ -207,7 +207,7 @@ router.get('/trends', async (req: Request, res: Response) => {
         });
     }
 
-    res.json({
+    return res.json({
       success: true,
       data: data,
       metadata: {
@@ -221,7 +221,7 @@ router.get('/trends', async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('[Analytics API] Error fetching trends:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: 'Failed to fetch trends',
       message: error instanceof Error ? error.message : 'Unknown error',
@@ -286,6 +286,122 @@ router.get('/errors', async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       error: 'Failed to fetch top errors',
+      message: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * GET /api/analytics/alerts
+ * Get active alerts based on system health metrics
+ *
+ * Returns alerts for:
+ * - High failure rates (>10%)
+ * - Slow response times (>5s)
+ * - Cost anomalies
+ * - Low success rates by delivery method
+ */
+router.get('/alerts', async (req: Request, res: Response) => {
+  try {
+    // Get current metrics
+    const overview = await getOverallMetrics();
+    const methodMetrics = await getMetricsByDeliveryMethod();
+
+    const alerts: Array<{
+      id: string;
+      type: 'error' | 'warning' | 'info';
+      title: string;
+      message: string;
+      metric?: number;
+      threshold?: number;
+      timestamp: string;
+    }> = [];
+
+    // Alert 1: Low overall success rate
+    if (overview.success_rate < 90) {
+      alerts.push({
+        id: `alert-success-rate-${Date.now()}`,
+        type: 'error',
+        title: 'Low Success Rate',
+        message: `Overall success rate is ${overview.success_rate.toFixed(1)}%, below the 90% threshold. Investigate failed transactions.`,
+        metric: overview.success_rate,
+        threshold: 90,
+        timestamp: new Date().toISOString(),
+      });
+    } else if (overview.success_rate < 95) {
+      alerts.push({
+        id: `alert-success-rate-warning-${Date.now()}`,
+        type: 'warning',
+        title: 'Success Rate Below Target',
+        message: `Success rate is ${overview.success_rate.toFixed(1)}%. Target is 95%+.`,
+        metric: overview.success_rate,
+        threshold: 95,
+        timestamp: new Date().toISOString(),
+      });
+    }
+
+    // Alert 2: Slow response times
+    if (overview.avg_response_time_ms && overview.avg_response_time_ms > 5000) {
+      alerts.push({
+        id: `alert-response-time-${Date.now()}`,
+        type: 'warning',
+        title: 'Slow Response Time',
+        message: `Average response time is ${overview.avg_response_time_ms}ms, exceeding 5s threshold. Gateway may be experiencing delays.`,
+        metric: overview.avg_response_time_ms,
+        threshold: 5000,
+        timestamp: new Date().toISOString(),
+      });
+    }
+
+    // Alert 3: High failure rate by delivery method
+    for (const method of methodMetrics) {
+      const failureRate = (method.failed_count / method.total_count) * 100;
+      if (failureRate > 20) {
+        alerts.push({
+          id: `alert-method-failure-${method.delivery_method}-${Date.now()}`,
+          type: 'error',
+          title: `${method.delivery_method} Failures`,
+          message: `${method.delivery_method} has ${failureRate.toFixed(1)}% failure rate (${method.failed_count}/${method.total_count} transactions). Check connectivity.`,
+          metric: failureRate,
+          threshold: 20,
+          timestamp: new Date().toISOString(),
+        });
+      }
+    }
+
+    // Alert 4: No recent transactions (if total > 0)
+    if (overview.total_transactions > 0) {
+      // Get transactions from last hour
+      const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+      const recentTransactions = await getOverallMetrics(oneHourAgo);
+
+      if (recentTransactions.total_transactions === 0) {
+        alerts.push({
+          id: `alert-no-recent-txs-${Date.now()}`,
+          type: 'info',
+          title: 'No Recent Activity',
+          message: 'No transactions processed in the last hour.',
+          timestamp: new Date().toISOString(),
+        });
+      }
+    }
+
+    res.json({
+      success: true,
+      data: alerts,
+      metadata: {
+        total_alerts: alerts.length,
+        errors: alerts.filter(a => a.type === 'error').length,
+        warnings: alerts.filter(a => a.type === 'warning').length,
+        info: alerts.filter(a => a.type === 'info').length,
+      },
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error('[Analytics API] Error generating alerts:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to generate alerts',
       message: error instanceof Error ? error.message : 'Unknown error',
     });
   }

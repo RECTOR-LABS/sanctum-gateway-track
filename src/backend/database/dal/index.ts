@@ -20,7 +20,7 @@ export {
   getTransactionsByStatus,
   getTotalTransactionCount,
   getCountByDeliveryMethod,
-} from './transaction-dal';
+} from './transaction-dal.js';
 
 // Analytics DAL exports
 export {
@@ -32,4 +32,4 @@ export {
   getMetricsByDeliveryMethod,
   getTopErrors,
   clearAnalyticsCache,
-} from './analytics-dal';
+} from './analytics-dal.js';

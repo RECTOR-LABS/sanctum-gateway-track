@@ -47,7 +47,8 @@ export function useWebSocket(options: UseWebSocketOptions) {
   const shouldReconnect = useRef(true);
 
   const connect = useCallback(() => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) {
+    // Prevent multiple simultaneous connections
+    if (wsRef.current?.readyState === WebSocket.OPEN || wsRef.current?.readyState === WebSocket.CONNECTING) {
       return;
     }
 
@@ -76,13 +77,25 @@ export function useWebSocket(options: UseWebSocketOptions) {
         wsRef.current = null;
         onDisconnect?.();
 
-        // Attempt reconnection
-        if (shouldReconnect.current && reconnectCount < maxReconnectAttempts) {
-          console.log(`[WebSocket] Reconnecting in ${reconnectInterval}ms...`);
-          reconnectTimeoutRef.current = setTimeout(() => {
-            setReconnectCount((prev) => prev + 1);
-            connect();
-          }, reconnectInterval);
+        // Attempt reconnection with exponential backoff
+        if (shouldReconnect.current) {
+          setReconnectCount((prevCount) => {
+            const nextCount = prevCount + 1;
+
+            if (nextCount <= maxReconnectAttempts) {
+              // Exponential backoff: 3s, 6s, 12s, etc. (capped at 30s)
+              const backoffDelay = Math.min(reconnectInterval * Math.pow(2, prevCount), 30000);
+              console.log(`[WebSocket] Reconnecting in ${backoffDelay}ms... (attempt ${nextCount}/${maxReconnectAttempts})`);
+
+              reconnectTimeoutRef.current = setTimeout(() => {
+                connect();
+              }, backoffDelay);
+            } else {
+              console.error('[WebSocket] Max reconnection attempts reached');
+            }
+
+            return nextCount;
+          });
         }
       };
 
@@ -95,7 +108,7 @@ export function useWebSocket(options: UseWebSocketOptions) {
     } catch (error) {
       console.error('[WebSocket] Connection failed:', error);
     }
-  }, [url, onConnect, onMessage, onDisconnect, onError, reconnectInterval, reconnectCount, maxReconnectAttempts]);
+  }, [url, onConnect, onMessage, onDisconnect, onError, reconnectInterval, maxReconnectAttempts]);
 
   const disconnect = useCallback(() => {
     shouldReconnect.current = false;
@@ -118,12 +131,15 @@ export function useWebSocket(options: UseWebSocketOptions) {
   }, []);
 
   useEffect(() => {
+    shouldReconnect.current = true;
     connect();
 
     return () => {
+      shouldReconnect.current = false;
       disconnect();
     };
-  }, [connect, disconnect]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url]); // Only reconnect when URL changes
 
   return {
     isConnected,

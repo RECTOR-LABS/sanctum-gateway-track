@@ -74,7 +74,7 @@ export default function AnalyticsPage() {
   // Fetch historical trends (volume, success rate, cost)
   const { data: volumeTrends } = useSWR(
     ['volume-trends', filters.startDate, filters.endDate],
-    () => apiClient.getTrends('volume', 'hour', undefined, filters.startDate, filters.endDate),
+    () => apiClient.getTrends('transactions', 'hour', undefined, filters.startDate, filters.endDate),
     { refreshInterval: 60000 }
   );
 
@@ -84,10 +84,10 @@ export default function AnalyticsPage() {
     { refreshInterval: 60000 }
   );
 
-  // Fetch alerts (mock data for now - backend implementation pending)
+  // Fetch alerts from backend API
   const { data: alerts } = useSWR(
     ['alerts'],
-    () => Promise.resolve([]), // TODO: Implement alerts API endpoint
+    () => apiClient.getAlerts(),
     { refreshInterval: 30000 }
   );
 

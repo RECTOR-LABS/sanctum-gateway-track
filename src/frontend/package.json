@@ -5,7 +5,11 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "next start"
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "typecheck:strict": "tsc --noEmit --strict",
+    "lint": "next lint",
+    "clean": "lsof -ti:3000 | xargs kill -9 2>/dev/null || true"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",

@@ -21,6 +21,11 @@ export function RealTimeTransactionFeed({
   const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions);
   const [autoScroll, setAutoScroll] = useState(true);
 
+  // Update transactions when initialTransactions prop changes
+  useEffect(() => {
+    setTransactions(initialTransactions);
+  }, [initialTransactions]);
+
   const handleMessage = useCallback((message: WSMessage) => {
     switch (message.type) {
       case WSEventType.TRANSACTION_CREATED:

@@ -6,6 +6,7 @@ import { TransactionList } from './transaction-list';
 import { useWebSocket, WSEventType, WSMessage } from '@/lib/websocket';
 import { Badge } from '@/components/ui/badge';
 import { WifiOff, Wifi } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface RealTimeTransactionFeedProps {
   initialTransactions?: Transaction[];
@@ -36,6 +37,16 @@ export function RealTimeTransactionFeed({
           if (prev.some((tx) => tx.id === newTx.id)) {
             return prev;
           }
+
+          // Show toast notification for new transaction
+          const sigShort = newTx.signature.slice(0, 8) + '...' + newTx.signature.slice(-8);
+          const deliveryMethod = newTx.delivery_method || 'Unknown';
+          const status = newTx.status === 'success' ? '✅' : newTx.status === 'failed' ? '❌' : '⏳';
+
+          toast.success(`New Transaction ${status}`, {
+            description: `${sigShort} via ${deliveryMethod}`,
+            duration: 4000,
+          });
 
           // Add new transaction to the top and limit total
           return [newTx, ...prev].slice(0, maxTransactions);

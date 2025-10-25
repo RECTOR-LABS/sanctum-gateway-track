@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   BarChart3,
   Receipt,
+  Radar,
   Settings,
 } from 'lucide-react';
 
@@ -28,6 +29,12 @@ const routes = [
     icon: Receipt,
     href: '/transactions',
     color: 'text-pink-700',
+  },
+  {
+    label: 'Monitor',
+    icon: Radar,
+    href: '/monitor',
+    color: 'text-emerald-500',
   },
 ];
 

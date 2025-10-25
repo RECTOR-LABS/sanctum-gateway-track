@@ -127,7 +127,7 @@ DATABASE_URL=postgresql://postgres:YOUR-PASSWORD@db.xxxxx.supabase.co:5432/postg
 REDIS_URL=redis://default:xxxxxxxxxxxxx@usw1-redis.upstash.io:6379
 
 # Existing Gateway Config (keep these)
-GATEWAY_API_KEY=***GATEWAY_API_KEY_REDACTED***
+GATEWAY_API_KEY=YOUR_GATEWAY_API_KEY
 GATEWAY_BASE_URL=https://tpg.sanctum.so/v1/mainnet
 SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
 SOLANA_NETWORK=mainnet-beta

@@ -50,7 +50,7 @@ export class GatewayClient implements IGatewayClient {
         throw new Error(`Gateway API request failed: ${response.statusText}`);
       }
 
-      const data = await response.json();
+      const data = await response.json() as any;
 
       if (data.error) {
         throw new Error(
@@ -94,7 +94,7 @@ export class GatewayClient implements IGatewayClient {
         throw new Error(`Gateway API request failed: ${response.statusText}`);
       }
 
-      const data = await response.json();
+      const data = await response.json() as any;
 
       if (data.error) {
         throw new Error(
@@ -138,7 +138,7 @@ export class GatewayClient implements IGatewayClient {
         throw new Error(`Gateway API request failed: ${response.statusText}`);
       }
 
-      const data: OptimizeTransactionResponse = await response.json();
+      const data = await response.json() as OptimizeTransactionResponse;
 
       if (data.error) {
         throw new Error(

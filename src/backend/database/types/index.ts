@@ -13,7 +13,7 @@ export type TransactionStatus = 'pending' | 'confirmed' | 'failed';
 /**
  * Delivery method enum - matches Gateway's delivery strategies
  */
-export type DeliveryMethod = 'sanctum-sender' | 'jito' | 'rpc' | 'unknown';
+export type DeliveryMethod = 'rpc' | 'jito' | 'triton' | 'paladin' | 'sanctum-sender' | 'unknown';
 
 /**
  * Transaction record interface

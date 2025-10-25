@@ -30,10 +30,11 @@ Solana developers face critical challenges:
 
 Gateway Insights provides:
 - 🎯 **Real-time Analytics** - Live dashboard with transaction feed and WebSocket updates
-- 💰 **Cost Optimization** - Track savings vs direct Jito submission (up to 90% savings)
+- 💰 **Gateway Cost Intelligence** - Track how Gateway's smart routing gives you Jito-level MEV protection at RPC-level costs
 - 📈 **Success Rate Metrics** - Compare RPC vs Jito vs Sanctum Sender performance
 - 📊 **Historical Trends** - Visualize patterns over time with 17+ interactive charts
 - 🚨 **Smart Alerts** - Get notified of failures, cost spikes, and anomalies
+- 👀 **Wallet Monitoring** - Monitor any Solana wallet address with real-time transaction tracking ✅ **NEW**
 - 🎨 **Beautiful UI** - Dark mode, responsive design, production-quality components
 
 ---
@@ -71,7 +72,7 @@ Gateway Insights provides:
 ### Core Analytics
 - ✅ **Real-time Transaction Feed** - Live updates with WebSocket, status indicators, detailed metadata
 - ✅ **Cost Breakdown** - Total costs, tips, refunds by delivery method
-- ✅ **Savings Calculator** - Gateway vs direct Jito comparison with ROI metrics
+- ✅ **Gateway Cost Intelligence** - Understand how Gateway's smart routing optimizes costs vs always-using-Jito
 - ✅ **Cost Trends** - Time-series visualization of cumulative and per-method costs
 - ✅ **Success Rate Dashboard** - Overall and per-method success rates with color-coded charts
 - ✅ **Failure Analysis** - Error categorization (timeout, network, RPC, Jito, blockhash, unknown)
@@ -79,12 +80,24 @@ Gateway Insights provides:
 - ✅ **Historical Trends** - Long-term volume, success rate, and cost patterns
 - ✅ **Comparative Analysis** - Gateway vs alternatives with radar charts and ROI calculations
 
+### Wallet Monitoring ✅ **NEW**
+- ✅ **Monitor Any Wallet** - Input any Solana wallet address to track transactions
+- ✅ **Real-time Updates** - WebSocket-powered live transaction feed (new transactions appear automatically)
+- ✅ **Client-side Validation** - Instant validation of wallet address format (base58, length check)
+- ✅ **Historical Transactions** - Auto-fetch recent transactions when monitoring starts
+- ✅ **Error Handling** - Graceful handling of duplicate wallets, invalid addresses, rate limits
+- ✅ **Success Feedback** - Visual confirmation with alerts and success messages
+- ✅ **Database Persistence** - All monitored transactions saved automatically
+- ✅ **Zero Rate Limiting** - Helius RPC integration (100k requests/day free tier)
+
 ### Advanced Features
+- ✅ **Wallet Monitoring** - Monitor any Solana wallet address with real-time updates ✅ **NEW**
 - ✅ **Alert System** - Critical, warning, and info alerts with severity levels
 - ✅ **Data Export** - CSV and JSON export for all analytics data
 - ✅ **Analytics Filters** - Date range, delivery method, and status filtering
 - ✅ **Dark Mode** - Full dark mode support with theme toggle
 - ✅ **Responsive Design** - Mobile, tablet, and desktop optimized
+- ✅ **Helius RPC Integration** - 100k requests/day free tier, zero rate limiting ✅ **NEW**
 
 ### Production Quality
 - ✅ **95% Production Readiness Score** - Comprehensive security audit, performance optimization
@@ -110,10 +123,20 @@ Without Gateway, we'd need to integrate separately with:
 
 **Gateway Solution**: Single `buildGatewayTransaction` + `sendTransaction` API handles all delivery methods with automatic routing.
 
-#### 2. **Cost Optimization with Automatic Refunds**
-Direct Jito submission requires upfront tips (often 0.001+ SOL) with no refunds on success.
+#### 2. **Smart Cost Optimization (The Real Value)**
 
-**Gateway Solution**: Dual-submission strategy with automatic tip refunds when RPC succeeds first. Our data shows **90.91% cost savings** vs direct Jito.
+**Important Clarification**: RPC is already the cheapest option (~0.000005 SOL per transaction). Gateway is NOT about being cheaper than RPC.
+
+**Gateway's Real Value**: Smart routing that gives you **Jito-level MEV protection at RPC-level costs** through dual-submission:
+
+- **Dual-Submission Strategy**: Gateway submits to BOTH Jito and RPC simultaneously
+- **Auto-Refunds**: Automatically refunds the unused submission (if RPC wins, Jito tip is refunded)
+- **Best of Both Worlds**: You get MEV protection when you need it, but pay RPC costs when RPC wins
+- **90.91% savings**: This refers to savings vs **always-using-Jito** (not vs RPC)
+
+**Without Gateway**: You choose either cheap RPC (risky) or expensive Jito (safe but costly). No middle ground.
+
+**With Gateway**: Get the safety net of Jito + the cost efficiency of RPC through intelligent routing and automatic refunds.
 
 #### 3. **Comprehensive Observability**
 Tracking transactions across multiple delivery methods requires:

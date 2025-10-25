@@ -52,7 +52,7 @@ export function SavingsCalculator({ data, isLoading }: SavingsCalculatorProps) {
             </div>
           </div>
           <div className="text-lg font-medium">
-            {isSavingMoney ? 'Cost Savings' : 'Additional Cost'} vs Direct Jito
+            {isSavingMoney ? 'Cost Savings' : 'Additional Cost'} vs Always-Using-Jito
           </div>
           <div className="text-3xl font-bold">
             {Math.abs(data.savings_vs_jito_sol).toFixed(6)} SOL
@@ -144,12 +144,12 @@ export function SavingsCalculator({ data, isLoading }: SavingsCalculatorProps) {
 
         {/* Gateway Value Proposition */}
         <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
-          <div className="text-sm font-medium mb-2">💡 Gateway Value</div>
+          <div className="text-sm font-medium mb-2">💡 Gateway Smart Routing</div>
           <div className="text-sm text-muted-foreground space-y-1">
-            <div>• Automatic routing to best delivery method</div>
-            <div>• Jito tip refunds when transactions fail</div>
-            <div>• Unified API for RPC and Jito</div>
-            <div>• Built-in observability and analytics</div>
+            <div>• Dual-submission: Submits to BOTH Jito AND RPC simultaneously</div>
+            <div>• Auto-refunds: Refunds unused submission when RPC wins</div>
+            <div>• Best of both: Jito-level MEV protection at RPC-level costs</div>
+            <div>• No decision needed: Gateway intelligently routes for you</div>
           </div>
         </div>
       </CardContent>

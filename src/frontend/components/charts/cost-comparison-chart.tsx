@@ -70,9 +70,11 @@ export function CostComparisonChart({ data, isLoading }: CostComparisonChartProp
       <CardHeader>
         <CardTitle>Cost Comparison</CardTitle>
         <CardDescription>
-          Savings: {data.savings_percentage.toFixed(1)}% vs Jito (
-          {data.savings_vs_jito_sol.toFixed(6)} SOL)
+          Gateway: {data.savings_percentage.toFixed(1)}% savings vs always-using-Jito ({data.savings_vs_jito_sol.toFixed(6)} SOL saved)
         </CardDescription>
+        <p className="text-xs text-muted-foreground mt-2">
+          💡 Gateway provides Jito-level MEV protection at RPC-level costs through smart dual-submission
+        </p>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>

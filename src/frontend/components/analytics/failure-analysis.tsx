@@ -104,13 +104,20 @@ export function FailureAnalysis({ errors, failureRateByMethod, isLoading }: Fail
     return acc;
   }, {} as Record<string, ErrorDetail[]>);
 
-  const totalErrors = errors.reduce((sum, e) => sum + e.count, 0);
+  // Guard against NaN in totals
+  const totalErrors = errors.reduce((sum, e) => {
+    const count = Number(e.count) || 0;
+    return sum + (Number.isFinite(count) ? count : 0);
+  }, 0);
+
   const uniqueErrorTypes = Object.keys(errorsByCategory).length;
 
-  // Most common error
-  const mostCommonError = errors.reduce((max, error) =>
-    error.count > max.count ? error : max
-  , errors[0]);
+  // Most common error with NaN guard
+  const mostCommonError = errors.reduce((max, error) => {
+    const errorCount = Number(error.count) || 0;
+    const maxCount = Number(max.count) || 0;
+    return errorCount > maxCount ? error : max;
+  }, errors[0]);
 
   return (
     <Card>
@@ -143,7 +150,9 @@ export function FailureAnalysis({ errors, failureRateByMethod, isLoading }: Fail
             <div className="text-xs font-medium truncate" title={mostCommonError.error_message}>
               {categorizeError(mostCommonError.error_message).category}
             </div>
-            <div className="text-sm text-muted-foreground">{mostCommonError.count} occurrences</div>
+            <div className="text-sm text-muted-foreground">
+              {Number(mostCommonError.count) || 0} occurrences
+            </div>
           </div>
         </div>
 
@@ -187,8 +196,17 @@ export function FailureAnalysis({ errors, failureRateByMethod, isLoading }: Fail
           <div className="space-y-4">
             {Object.entries(errorsByCategory).map(([category, categoryErrors]) => {
               const { icon: Icon } = categorizeError(categoryErrors[0].error_message);
-              const categoryCount = categoryErrors.reduce((sum, e) => sum + e.count, 0);
-              const percentage = ((categoryCount / totalErrors) * 100).toFixed(1);
+
+              // Guard against NaN in category totals
+              const categoryCount = categoryErrors.reduce((sum, e) => {
+                const count = Number(e.count) || 0;
+                return sum + (Number.isFinite(count) ? count : 0);
+              }, 0);
+
+              // Guard against division by zero and NaN
+              const percentage = totalErrors > 0
+                ? ((categoryCount / totalErrors) * 100).toFixed(1)
+                : '0.0';
 
               return (
                 <div key={category} className="space-y-2">
@@ -207,7 +225,7 @@ export function FailureAnalysis({ errors, failureRateByMethod, isLoading }: Fail
                           <div className="flex-1 font-mono text-xs text-muted-foreground break-all">
                             {error.error_message}
                           </div>
-                          <Badge variant="secondary">{error.count}</Badge>
+                          <Badge variant="secondary">{Number(error.count) || 0}</Badge>
                         </div>
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
                           {error.delivery_method && (
@@ -237,8 +255,12 @@ export function FailureAnalysis({ errors, failureRateByMethod, isLoading }: Fail
               <div className="text-sm font-medium">Actionable Insights</div>
               <ul className="text-sm text-muted-foreground space-y-1">
                 {Object.entries(errorsByCategory).map(([category, categoryErrors]) => {
-                  const categoryCount = categoryErrors.reduce((sum, e) => sum + e.count, 0);
-                  const percentage = ((categoryCount / totalErrors) * 100);
+                  // Guard against NaN in insights
+                  const categoryCount = categoryErrors.reduce((sum, e) => {
+                    const count = Number(e.count) || 0;
+                    return sum + (Number.isFinite(count) ? count : 0);
+                  }, 0);
+                  const percentage = totalErrors > 0 ? ((categoryCount / totalErrors) * 100) : 0;
 
                   if (category === 'Timeout' && percentage > 20) {
                     return (

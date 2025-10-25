@@ -159,7 +159,8 @@ export default function AnalyticsPage() {
           isLoading={!methodMetrics}
         />
 
-        <div className="grid gap-6 md:grid-cols-2">
+        {/* Vertical Layout: Failure Analysis on top, Response Time Analysis below */}
+        <div className="space-y-6">
           <FailureAnalysis
             errors={topErrors}
             failureRateByMethod={methodMetrics?.map(m => {

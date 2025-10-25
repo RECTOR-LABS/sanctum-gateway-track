@@ -301,7 +301,7 @@ router.get('/errors', async (req: Request, res: Response) => {
  * - Cost anomalies
  * - Low success rates by delivery method
  */
-router.get('/alerts', async (req: Request, res: Response) => {
+router.get('/alerts', async (_req: Request, res: Response) => {
   try {
     // Get current metrics
     const overview = await getOverallMetrics();

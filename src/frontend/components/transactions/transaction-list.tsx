@@ -33,6 +33,12 @@ export function TransactionList({ transactions, onTransactionClick }: Transactio
             <TableHead>Status</TableHead>
             <TableHead>Delivery</TableHead>
             <TableHead>Cost</TableHead>
+            <TableHead>
+              <div className="flex items-center gap-1">
+                Gateway Savings
+                <span className="text-xs text-muted-foreground">(simulated)</span>
+              </div>
+            </TableHead>
             <TableHead>Response Time</TableHead>
             <TableHead>Time</TableHead>
           </TableRow>

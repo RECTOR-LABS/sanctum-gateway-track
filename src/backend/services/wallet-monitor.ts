@@ -16,6 +16,8 @@ interface MonitoredWallet {
   lastSignature?: string; // Last processed transaction signature
   isActive: boolean;
   startedAt: Date;
+  transactionCount: number; // Number of transactions monitored
+  stopReason?: 'manual' | 'limit-reached'; // Why monitoring stopped
 }
 
 class WalletMonitorService {
@@ -26,6 +28,7 @@ class WalletMonitorService {
   private readonly MAX_TRANSACTIONS_PER_POLL = parseInt(process.env.MAX_TRANSACTIONS_PER_POLL || '5'); // Fetch fewer transactions
   private readonly REQUEST_DELAY_MS = parseInt(process.env.REQUEST_DELAY_MS || '300'); // Delay between requests
   private readonly MAX_WALLETS = parseInt(process.env.MAX_MONITORED_WALLETS || '3'); // Maximum wallets to monitor simultaneously
+  private readonly MAX_TRANSACTIONS_PER_WALLET = parseInt(process.env.MAX_TRANSACTIONS_PER_WALLET || '200'); // Per-wallet transaction limit for demo
 
   constructor() {
     const rpcUrl = process.env.SOLANA_RPC_URL || 'https://api.mainnet-beta.solana.com';
@@ -40,11 +43,31 @@ class WalletMonitorService {
       // Validate address
       const publicKey = new PublicKey(address);
 
-      // Check if already monitoring
-      if (this.monitoredWallets.has(address)) {
+      // Check if already monitoring and active
+      const existingWallet = this.monitoredWallets.get(address);
+      if (existingWallet && existingWallet.isActive) {
         return {
           success: false,
           message: 'Wallet is already being monitored',
+          currentCount: this.monitoredWallets.size,
+          maxWallets: this.MAX_WALLETS,
+        };
+      }
+
+      // Allow re-monitoring of stopped wallets
+      if (existingWallet && !existingWallet.isActive) {
+        existingWallet.isActive = true;
+        existingWallet.stopReason = undefined;
+        console.log(`[WalletMonitor] Re-started monitoring wallet: ${address} (${existingWallet.transactionCount}/${this.MAX_TRANSACTIONS_PER_WALLET} transactions)`);
+
+        // Start polling if not already running
+        if (!this.pollingInterval) {
+          this.startPolling();
+        }
+
+        return {
+          success: true,
+          message: 'Wallet monitoring re-started successfully',
           currentCount: this.monitoredWallets.size,
           maxWallets: this.MAX_WALLETS,
         };
@@ -66,6 +89,7 @@ class WalletMonitorService {
         publicKey,
         isActive: true,
         startedAt: new Date(),
+        transactionCount: 0,
       });
 
       console.log(`[WalletMonitor] Started monitoring wallet: ${address}`);
@@ -94,33 +118,48 @@ class WalletMonitorService {
   }
 
   /**
-   * Remove a wallet from monitoring
+   * Remove a wallet from monitoring (marks as inactive, doesn't delete)
    */
   removeWallet(address: string): boolean {
-    const removed = this.monitoredWallets.delete(address);
+    const wallet = this.monitoredWallets.get(address);
 
-    if (removed) {
-      console.log(`[WalletMonitor] Stopped monitoring wallet: ${address}`);
+    if (wallet) {
+      wallet.isActive = false;
+      wallet.stopReason = 'manual';
+      console.log(`[WalletMonitor] Manually stopped monitoring wallet: ${address} (${wallet.transactionCount}/${this.MAX_TRANSACTIONS_PER_WALLET} transactions)`);
 
-      // Stop polling if no wallets left
-      if (this.monitoredWallets.size === 0 && this.pollingInterval) {
+      // Stop polling if no active wallets left
+      const activeWallets = Array.from(this.monitoredWallets.values()).filter(w => w.isActive);
+      if (activeWallets.length === 0 && this.pollingInterval) {
         clearInterval(this.pollingInterval);
         this.pollingInterval = null;
-        console.log('[WalletMonitor] Polling stopped (no wallets to monitor)');
+        console.log('[WalletMonitor] Polling stopped (no active wallets to monitor)');
       }
+
+      return true;
     }
 
-    return removed;
+    return false;
   }
 
   /**
    * Get list of monitored wallets
    */
-  getMonitoredWallets(): Array<{ address: string; startedAt: Date; isActive: boolean }> {
+  getMonitoredWallets(): Array<{
+    address: string;
+    startedAt: Date;
+    isActive: boolean;
+    transactionCount: number;
+    maxTransactions: number;
+    stopReason?: 'manual' | 'limit-reached';
+  }> {
     return Array.from(this.monitoredWallets.values()).map(wallet => ({
       address: wallet.address,
       startedAt: wallet.startedAt,
       isActive: wallet.isActive,
+      transactionCount: wallet.transactionCount,
+      maxTransactions: this.MAX_TRANSACTIONS_PER_WALLET,
+      stopReason: wallet.stopReason,
     }));
   }
 
@@ -128,10 +167,11 @@ class WalletMonitorService {
    * Get current wallet count and limit
    */
   getWalletStats(): { currentCount: number; maxWallets: number; canAddMore: boolean } {
+    const activeWallets = Array.from(this.monitoredWallets.values()).filter(w => w.isActive);
     return {
-      currentCount: this.monitoredWallets.size,
+      currentCount: activeWallets.length,
       maxWallets: this.MAX_WALLETS,
-      canAddMore: this.monitoredWallets.size < this.MAX_WALLETS,
+      canAddMore: activeWallets.length < this.MAX_WALLETS,
     };
   }
 
@@ -283,6 +323,42 @@ class WalletMonitorService {
         },
         timestamp: new Date().toISOString(),
       });
+
+      // Increment transaction count and check limit
+      const wallet = this.monitoredWallets.get(walletAddress);
+      if (wallet) {
+        wallet.transactionCount++;
+
+        // Check if transaction limit reached
+        if (wallet.transactionCount >= this.MAX_TRANSACTIONS_PER_WALLET) {
+          wallet.isActive = false;
+          wallet.stopReason = 'limit-reached';
+
+          console.log(
+            `[WalletMonitor] 🛑 Auto-stopped wallet ${walletAddress} - reached limit (${wallet.transactionCount}/${this.MAX_TRANSACTIONS_PER_WALLET} transactions)`
+          );
+
+          // Broadcast wallet auto-stop event
+          wsService.broadcast({
+            type: 'wallet:limit-reached' as WSEventType,
+            data: {
+              address: walletAddress,
+              transactionCount: wallet.transactionCount,
+              maxTransactions: this.MAX_TRANSACTIONS_PER_WALLET,
+              message: 'Wallet monitoring automatically stopped - 200 transaction limit reached for this demo',
+            },
+            timestamp: new Date().toISOString(),
+          });
+
+          // Stop polling if no active wallets left
+          const activeWallets = Array.from(this.monitoredWallets.values()).filter(w => w.isActive);
+          if (activeWallets.length === 0 && this.pollingInterval) {
+            clearInterval(this.pollingInterval);
+            this.pollingInterval = null;
+            console.log('[WalletMonitor] Polling stopped (no active wallets to monitor)');
+          }
+        }
+      }
 
     } catch (error) {
       // Ignore duplicate key errors (transaction already exists)

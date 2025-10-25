@@ -27,6 +27,14 @@ export function TransactionRow({ transaction, onClick }: TransactionRowProps) {
     window.open(`https://solscan.io/tx/${transaction.signature}`, '_blank');
   };
 
+  // Calculate potential Gateway savings
+  // Gateway fee: 0.0001 SOL = 100,000 lamports
+  const GATEWAY_FEE_LAMPORTS = 100_000;
+  const actualCostLamports = transaction.cost_lamports;
+  const savingsLamports = actualCostLamports - GATEWAY_FEE_LAMPORTS;
+  const savingsSol = savingsLamports / 1_000_000_000;
+  const isSavings = savingsLamports > 0;
+
   return (
     <tr
       className="border-b transition-colors hover:bg-muted/50 cursor-pointer"
@@ -78,11 +86,22 @@ export function TransactionRow({ transaction, onClick }: TransactionRowProps) {
       <td className="p-4 font-mono text-sm">
         {formatSol(transaction.cost_lamports)} SOL
       </td>
-      <td className="p-4 text-sm text-muted-foreground">
-        {transaction.response_time_ms}ms
+      <td className="p-4 font-mono text-sm">
+        {isSavings ? (
+          <span className="text-green-600 dark:text-green-400">
+            +{savingsSol.toFixed(8)} SOL
+          </span>
+        ) : (
+          <span className="text-red-600 dark:text-red-400">
+            {savingsSol.toFixed(8)} SOL
+          </span>
+        )}
       </td>
       <td className="p-4 text-sm text-muted-foreground">
-        {formatRelativeTime(transaction.created_at)}
+        {transaction.response_time_ms ? `${transaction.response_time_ms}ms` : 'N/A'}
+      </td>
+      <td className="p-4 text-sm text-muted-foreground">
+        {formatRelativeTime(transaction.block_time || transaction.created_at)}
       </td>
     </tr>
   );

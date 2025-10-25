@@ -7,14 +7,15 @@ const sections = [
   { id: 1, label: 'Cover', shortLabel: 'Cover' },
   { id: 2, label: 'Problem', shortLabel: 'Problem' },
   { id: 3, label: 'Solution', shortLabel: 'Solution' },
-  { id: 4, label: 'Gateway Proof', shortLabel: 'Proof' },
-  { id: 5, label: 'Results', shortLabel: 'Results' },
-  { id: 6, label: 'Technical', shortLabel: 'Tech' },
-  { id: 7, label: 'Innovation', shortLabel: 'Innovation' },
-  { id: 8, label: 'Live Demo', shortLabel: 'Demo' },
-  { id: 9, label: 'Impact', shortLabel: 'Impact' },
-  { id: 10, label: 'Tech Stack', shortLabel: 'Stack' },
-  { id: 11, label: 'Summary', shortLabel: 'Summary' },
+  { id: 4, label: 'Demo Video', shortLabel: 'Video' },
+  { id: 5, label: 'Gateway Proof', shortLabel: 'Proof' },
+  { id: 6, label: 'Results', shortLabel: 'Results' },
+  { id: 7, label: 'Technical', shortLabel: 'Tech' },
+  { id: 8, label: 'Innovation', shortLabel: 'Innovation' },
+  { id: 9, label: 'Live Demo', shortLabel: 'Demo' },
+  { id: 10, label: 'Impact', shortLabel: 'Impact' },
+  { id: 11, label: 'Tech Stack', shortLabel: 'Stack' },
+  { id: 12, label: 'Summary', shortLabel: 'Summary' },
 ];
 
 export function PitchDeckNav() {

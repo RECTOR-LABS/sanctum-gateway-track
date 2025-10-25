@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { PitchDeckNav } from '@/components/pitch-deck/pitch-deck-nav';
+import { DemoVideoSection } from '@/components/pitch-deck/demo-video-section';
 import { FadeIn } from '@/components/animations/fade-in';
 import { ScaleIn } from '@/components/animations/scale-in';
 import { Floating } from '@/components/animations/floating';
@@ -266,8 +267,13 @@ export default function PitchDeckPage() {
         </div>
       </section>
 
-      {/* Section 4: Gateway Integration Proof */}
-      <section id="section-4" className="min-h-screen flex items-center justify-center p-8 bg-muted/30">
+      {/* Section 4: Demo Video (Judge-Friendly) */}
+      <section id="section-4" className="min-h-screen flex items-center justify-center p-8 bg-gradient-to-br from-primary/5 via-background to-primary/10">
+        <DemoVideoSection />
+      </section>
+
+      {/* Section 5: Gateway Integration Proof */}
+      <section id="section-5" className="min-h-screen flex items-center justify-center p-8 bg-muted/30">
         <div className="max-w-6xl w-full space-y-12">
           <FadeIn>
             <div className="text-center space-y-4">
@@ -359,8 +365,8 @@ const signature = await gatewayClient.sendTransaction(
         </div>
       </section>
 
-      {/* Section 5: Quantitative Results */}
-      <section id="section-5" className="min-h-screen flex items-center justify-center p-8">
+      {/* Section 6: Quantitative Results */}
+      <section id="section-6" className="min-h-screen flex items-center justify-center p-8">
         <div className="max-w-6xl w-full space-y-12">
           <FadeIn>
             <div className="text-center space-y-4">
@@ -464,8 +470,8 @@ const signature = await gatewayClient.sendTransaction(
         </div>
       </section>
 
-      {/* Section 6: Technical Achievements */}
-      <section id="section-6" className="min-h-screen flex items-center justify-center p-8 bg-muted/30">
+      {/* Section 7: Technical Achievements */}
+      <section id="section-7" className="min-h-screen flex items-center justify-center p-8 bg-muted/30">
         <div className="max-w-6xl w-full space-y-12">
           <FadeIn>
             <div className="text-center space-y-4">
@@ -544,8 +550,8 @@ const signature = await gatewayClient.sendTransaction(
         </div>
       </section>
 
-      {/* Section 7: Innovation & Features */}
-      <section id="section-7" className="min-h-screen flex items-center justify-center p-8">
+      {/* Section 8: Innovation & Features */}
+      <section id="section-8" className="min-h-screen flex items-center justify-center p-8">
         <div className="max-w-6xl w-full space-y-12">
           <FadeIn>
             <div className="text-center space-y-4">
@@ -632,8 +638,8 @@ const signature = await gatewayClient.sendTransaction(
         </div>
       </section>
 
-      {/* Section 8: Live Demo Screenshots */}
-      <section id="section-8" className="min-h-screen flex items-center justify-center p-8 bg-muted/30">
+      {/* Section 9: Live Demo Screenshots */}
+      <section id="section-9" className="min-h-screen flex items-center justify-center p-8 bg-muted/30">
         <div className="max-w-6xl w-full space-y-12">
           <div className="text-center space-y-4">
             <h2 className="text-4xl md:text-5xl font-bold">Live Application</h2>
@@ -778,8 +784,8 @@ const signature = await gatewayClient.sendTransaction(
         </div>
       </section>
 
-      {/* Section 9: Impact & Use Cases */}
-      <section id="section-9" className="min-h-screen flex items-center justify-center p-8">
+      {/* Section 10: Impact & Use Cases */}
+      <section id="section-10" className="min-h-screen flex items-center justify-center p-8">
         <div className="max-w-6xl w-full space-y-12">
           <div className="text-center space-y-4">
             <h2 className="text-4xl md:text-5xl font-bold">Real-World Impact</h2>
@@ -878,8 +884,8 @@ const signature = await gatewayClient.sendTransaction(
         </div>
       </section>
 
-      {/* Section 10: Tech Stack */}
-      <section id="section-10" className="min-h-screen flex items-center justify-center p-8 bg-muted/30">
+      {/* Section 11: Tech Stack */}
+      <section id="section-11" className="min-h-screen flex items-center justify-center p-8 bg-muted/30">
         <div className="max-w-6xl w-full space-y-12">
           <div className="text-center space-y-4">
             <h2 className="text-4xl md:text-5xl font-bold">Technology Stack</h2>
@@ -997,8 +1003,8 @@ const signature = await gatewayClient.sendTransaction(
         </div>
       </section>
 
-      {/* Section 11: Call to Action */}
-      <section id="section-11" className="min-h-screen flex items-center justify-center p-8 bg-gradient-to-br from-primary/20 via-primary/5 to-background">
+      {/* Section 12: Call to Action */}
+      <section id="section-12" className="min-h-screen flex items-center justify-center p-8 bg-gradient-to-br from-primary/20 via-primary/5 to-background">
         <div className="max-w-4xl w-full text-center space-y-12">
           <div className="space-y-6">
             <Badge className="text-lg px-6 py-2 bg-primary/10 border-primary/30 text-primary">

@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { CardLoadingState } from '@/components/ui/loading-state';
 import { getDeliveryMethodName } from '@/lib/format';
+import type { DeliveryMethod } from '@/lib/types';
 
 interface ErrorDetail {
   error_message: string;
@@ -162,7 +163,7 @@ export function FailureAnalysis({ errors, failureRateByMethod, isLoading }: Fail
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="font-medium">
-                        {getDeliveryMethodName(method.delivery_method)}
+                        {getDeliveryMethodName(method.delivery_method as DeliveryMethod)}
                       </div>
                       <Badge variant={isHighFailure ? 'destructive' : 'secondary'}>
                         {method.failure_rate.toFixed(1)}% failure
@@ -208,7 +209,7 @@ export function FailureAnalysis({ errors, failureRateByMethod, isLoading }: Fail
                         </div>
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
                           {error.delivery_method && (
-                            <span>Method: {getDeliveryMethodName(error.delivery_method)}</span>
+                            <span>Method: {getDeliveryMethodName(error.delivery_method as DeliveryMethod)}</span>
                           )}
                           <span>Last seen: {new Date(error.last_seen).toLocaleString()}</span>
                         </div>

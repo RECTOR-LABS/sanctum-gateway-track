@@ -47,7 +47,7 @@ redis://default:xxxxxxxxxxxxx@usw1-redis.upstash.io:6379
 ```bash
 DATABASE_URL=postgresql://postgres:...@db.xxxxx.supabase.co:5432/postgres
 REDIS_URL=redis://default:...@usw1-redis.upstash.io:6379
-GATEWAY_API_KEY=01K75QGW2CS39MX95RB6FXJBWA
+GATEWAY_API_KEY=YOUR_GATEWAY_API_KEY
 GATEWAY_BASE_URL=https://tpg.sanctum.so/v1/mainnet
 SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
 SOLANA_NETWORK=mainnet-beta

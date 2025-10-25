@@ -58,7 +58,7 @@ DATABASE_URL=postgresql://postgres:PASSWORD@HOST:PORT/railway
 REDIS_URL=redis://default:PASSWORD@HOST:PORT
 
 # Existing Gateway Config (keep these)
-GATEWAY_API_KEY=01K75QGW2CS39MX95RB6FXJBWA
+GATEWAY_API_KEY=your_gateway_api_key_here
 GATEWAY_BASE_URL=https://tpg.sanctum.so/v1/mainnet
 SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
 SOLANA_NETWORK=mainnet-beta

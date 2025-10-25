@@ -60,7 +60,7 @@
 - **Service:** Sanctum Gateway (Third-party API)
 - **Endpoint:** `https://tpg.sanctum.so/v1/mainnet`
 - **Purpose:** Build and send Solana transactions via Gateway
-- **API Key Required:** `01K75QGW2CS39MX95RB6FXJBWA`
+- **API Key Required:** `YOUR_GATEWAY_API_KEY`
 - **Used By:** Core transaction submission logic
 
 **Endpoints Used:**
@@ -236,7 +236,7 @@ DATABASE_URL=postgresql://localhost:5432/gateway_insights
 REDIS_URL=redis://localhost:6379
 
 # Cloud services (required)
-GATEWAY_RPC_URL=https://tpg.sanctum.so/v1/mainnet?apiKey=01K75QGW2CS39MX95RB6FXJBWA
+GATEWAY_RPC_URL=https://tpg.sanctum.so/v1/mainnet?apiKey=YOUR_GATEWAY_API_KEY
 SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
 ```
 

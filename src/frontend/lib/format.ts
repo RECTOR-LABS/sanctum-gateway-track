@@ -93,6 +93,6 @@ export function getDeliveryMethodName(method: DeliveryMethod): string {
     case 'sanctum-sender':
       return 'Sanctum';
     default:
-      return 'Unknown';
+      return 'Without Gateway';
   }
 }

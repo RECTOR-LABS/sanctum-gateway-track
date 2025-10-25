@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import {
+  Home,
   LayoutDashboard,
   BarChart3,
   Receipt,
@@ -12,6 +13,12 @@ import {
 } from 'lucide-react';
 
 const routes = [
+  {
+    label: 'Home',
+    icon: Home,
+    href: '/',
+    color: 'text-primary',
+  },
   {
     label: 'Dashboard',
     icon: LayoutDashboard,
@@ -46,7 +53,7 @@ export function Sidebar() {
       <div className="px-3 py-2 flex-1">
         <Link href="/dashboard" className="flex items-center pl-3 mb-14">
           <div className="relative h-8 w-8 mr-4">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600" />
+            <img src="/logo.svg" alt="Gateway Insights" className="h-8 w-8" />
           </div>
           <h1 className="text-2xl font-bold">
             Gateway <span className="text-muted-foreground">Insights</span>

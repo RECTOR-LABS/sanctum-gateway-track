@@ -14,6 +14,7 @@ import { HistoricalTrends } from '@/components/analytics/historical-trends';
 import { ComparativeAnalysis } from '@/components/analytics/comparative-analysis';
 import { AlertSystem } from '@/components/analytics/alert-system';
 import { ExportButton } from '@/components/analytics/export-button';
+import { AnalyticsNav } from '@/components/analytics/analytics-nav';
 import {
   formatAnalyticsForExport,
   formatMethodMetricsForExport,
@@ -96,9 +97,9 @@ export default function AnalyticsPage() {
   const exportMethodData = methodMetrics ? formatMethodMetricsForExport(methodMetrics) : [];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col">
       {/* Header with Export */}
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
           <p className="text-muted-foreground">
@@ -113,13 +114,20 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Filters */}
-      <AnalyticsFiltersComponent onFiltersChange={setFilters} />
+      <div className="mb-6">
+        <AnalyticsFiltersComponent onFiltersChange={setFilters} />
+      </div>
 
-      {/* Alert System */}
-      <AlertSystem alerts={alerts} isLoading={!alerts} />
+      {/* Sub-navigation */}
+      <AnalyticsNav />
 
-      {/* Cost Analysis Section */}
-      <div className="space-y-6">
+      {/* Main Content */}
+      <div className="flex flex-col gap-6 mt-6">
+        {/* Alert System */}
+        <AlertSystem alerts={alerts} isLoading={!alerts} />
+
+        {/* Cost Analysis Section */}
+        <div id="cost-analysis" className="space-y-6 scroll-mt-24">
         <div>
           <h2 className="text-2xl font-semibold mb-4">Cost Analysis</h2>
           <div className="grid gap-6 md:grid-cols-2">
@@ -142,9 +150,9 @@ export default function AnalyticsPage() {
         />
       </div>
 
-      {/* Success Rate & Performance Section */}
-      <div className="space-y-6">
-        <h2 className="text-2xl font-semibold">Success Rate & Performance</h2>
+        {/* Success Rate & Performance Section */}
+        <div id="performance" className="space-y-6 scroll-mt-24">
+          <h2 className="text-2xl font-semibold">Success Rate & Performance</h2>
 
         <SuccessRateDashboard
           data={methodMetrics}
@@ -154,12 +162,28 @@ export default function AnalyticsPage() {
         <div className="grid gap-6 md:grid-cols-2">
           <FailureAnalysis
             errors={topErrors}
-            failureRateByMethod={methodMetrics?.map(m => ({
-              delivery_method: m.delivery_method,
-              failure_rate: m.total_count > 0 ? ((m.failed_count / m.total_count) * 100) : 0,
-              failed_count: m.failed_count,
-              total_count: m.total_count,
-            }))}
+            failureRateByMethod={methodMetrics?.map(m => {
+              // Triple guard against NaN
+              const failedCount = Number(m.failed_count) || 0;
+              const totalCount = Number(m.total_count) || 0;
+              let failureRate = 0;
+
+              if (totalCount > 0 && !Number.isNaN(failedCount) && !Number.isNaN(totalCount)) {
+                failureRate = (failedCount / totalCount) * 100;
+              }
+
+              // Final NaN check
+              if (Number.isNaN(failureRate) || !Number.isFinite(failureRate)) {
+                failureRate = 0;
+              }
+
+              return {
+                delivery_method: m.delivery_method,
+                failure_rate: failureRate,
+                failed_count: failedCount,
+                total_count: totalCount,
+              };
+            })}
             isLoading={!topErrors}
           />
           <ResponseTimeAnalysis
@@ -167,11 +191,11 @@ export default function AnalyticsPage() {
             isLoading={!methodMetrics}
           />
         </div>
-      </div>
+        </div>
 
-      {/* Historical Trends Section */}
-      <div className="space-y-6">
-        <h2 className="text-2xl font-semibold">Historical Trends</h2>
+        {/* Historical Trends Section */}
+        <div id="trends" className="space-y-6 scroll-mt-24">
+          <h2 className="text-2xl font-semibold">Historical Trends</h2>
 
         <HistoricalTrends
           volumeData={volumeTrends}
@@ -179,16 +203,17 @@ export default function AnalyticsPage() {
           costData={jitoTrends} // Using jito as overall cost proxy
           isLoading={!volumeTrends}
         />
-      </div>
+        </div>
 
-      {/* Gateway Value Proposition */}
-      <div className="space-y-6">
-        <h2 className="text-2xl font-semibold">Gateway Value Proposition</h2>
+        {/* Gateway Value Proposition */}
+        <div id="value" className="space-y-6 scroll-mt-24">
+          <h2 className="text-2xl font-semibold">Gateway Value Proposition</h2>
 
-        <ComparativeAnalysis
-          data={costComparison}
-          isLoading={!costComparison}
-        />
+          <ComparativeAnalysis
+            data={costComparison}
+            isLoading={!costComparison}
+          />
+        </div>
       </div>
     </div>
   );

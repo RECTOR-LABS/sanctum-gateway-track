@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { AnalyticsOverview } from '@/lib/types';
-import { formatSol } from '@/lib/format';
+import { formatSol, formatSolCompact } from '@/lib/format';
 import { DollarSign, TrendingDown, TrendingUp, Coins } from 'lucide-react';
 import { CardLoadingState } from '@/components/ui/loading-state';
 
@@ -116,13 +116,13 @@ export function CostBreakdown({ data, isLoading }: CostBreakdownProps) {
                 </div>
               </div>
               <div className="text-right">
-                <div className="font-mono font-bold">
-                  {data.cost_by_delivery.sanctum_sender_cost_sol.toFixed(6)} SOL
+                <div className="font-mono font-bold whitespace-nowrap">
+                  {formatSolCompact(data.cost_by_delivery.sanctum_sender_cost_sol * 1_000_000_000)}
                 </div>
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm text-muted-foreground whitespace-nowrap">
                   {data.delivery_breakdown.sanctum_sender > 0
-                    ? (data.cost_by_delivery.sanctum_sender_cost_sol / data.delivery_breakdown.sanctum_sender).toFixed(6)
-                    : '0.000000'} SOL/tx
+                    ? formatSolCompact((data.cost_by_delivery.sanctum_sender_cost_sol / data.delivery_breakdown.sanctum_sender) * 1_000_000_000)
+                    : '0 SOL'}/tx
                 </div>
               </div>
             </div>
@@ -141,13 +141,13 @@ export function CostBreakdown({ data, isLoading }: CostBreakdownProps) {
                 </div>
               </div>
               <div className="text-right">
-                <div className="font-mono font-bold">
-                  {data.cost_by_delivery.jito_cost_sol.toFixed(6)} SOL
+                <div className="font-mono font-bold whitespace-nowrap">
+                  {formatSolCompact(data.cost_by_delivery.jito_cost_sol * 1_000_000_000)}
                 </div>
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm text-muted-foreground whitespace-nowrap">
                   {data.delivery_breakdown.jito > 0
-                    ? (data.cost_by_delivery.jito_cost_sol / data.delivery_breakdown.jito).toFixed(6)
-                    : '0.000000'} SOL/tx
+                    ? formatSolCompact((data.cost_by_delivery.jito_cost_sol / data.delivery_breakdown.jito) * 1_000_000_000)
+                    : '0 SOL'}/tx
                 </div>
               </div>
             </div>
@@ -166,13 +166,13 @@ export function CostBreakdown({ data, isLoading }: CostBreakdownProps) {
                 </div>
               </div>
               <div className="text-right">
-                <div className="font-mono font-bold">
-                  {data.cost_by_delivery.rpc_cost_sol.toFixed(6)} SOL
+                <div className="font-mono font-bold whitespace-nowrap">
+                  {formatSolCompact(data.cost_by_delivery.rpc_cost_sol * 1_000_000_000)}
                 </div>
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm text-muted-foreground whitespace-nowrap">
                   {data.delivery_breakdown.rpc > 0
-                    ? (data.cost_by_delivery.rpc_cost_sol / data.delivery_breakdown.rpc).toFixed(6)
-                    : '0.000000'} SOL/tx
+                    ? formatSolCompact((data.cost_by_delivery.rpc_cost_sol / data.delivery_breakdown.rpc) * 1_000_000_000)
+                    : '0 SOL'}/tx
                 </div>
               </div>
             </div>

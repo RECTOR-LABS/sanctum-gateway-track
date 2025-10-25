@@ -9,6 +9,7 @@ import {
   BarChart3,
   Receipt,
   Radar,
+  Rocket,
   Settings,
 } from 'lucide-react';
 
@@ -42,6 +43,12 @@ const routes = [
     icon: Radar,
     href: '/monitor',
     color: 'text-emerald-500',
+  },
+  {
+    label: 'Live Demo',
+    icon: Rocket,
+    href: '/demo',
+    color: 'text-orange-500',
   },
 ];
 

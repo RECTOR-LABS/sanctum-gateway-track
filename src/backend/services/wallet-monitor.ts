@@ -24,9 +24,9 @@ class WalletMonitorService {
   private connection: Connection;
   private monitoredWallets: Map<string, MonitoredWallet> = new Map();
   private pollingInterval: NodeJS.Timeout | null = null;
-  private readonly POLL_INTERVAL_MS = parseInt(process.env.POLL_INTERVAL_MS || '60000'); // Poll every 60 seconds (configurable)
-  private readonly MAX_TRANSACTIONS_PER_POLL = parseInt(process.env.MAX_TRANSACTIONS_PER_POLL || '5'); // Fetch fewer transactions
-  private readonly REQUEST_DELAY_MS = parseInt(process.env.REQUEST_DELAY_MS || '300'); // Delay between requests
+  private readonly POLL_INTERVAL_MS = parseInt(process.env.POLL_INTERVAL_MS || '10000'); // Poll every 10 seconds (fast for demo!)
+  private readonly MAX_TRANSACTIONS_PER_POLL = parseInt(process.env.MAX_TRANSACTIONS_PER_POLL || '10'); // Fetch more transactions per poll
+  private readonly REQUEST_DELAY_MS = parseInt(process.env.REQUEST_DELAY_MS || '200'); // Faster delay between requests
   private readonly MAX_WALLETS = parseInt(process.env.MAX_MONITORED_WALLETS || '3'); // Maximum wallets to monitor simultaneously
   private readonly MAX_TRANSACTIONS_PER_WALLET = parseInt(process.env.MAX_TRANSACTIONS_PER_WALLET || '200'); // Per-wallet transaction limit for demo
 
@@ -280,14 +280,9 @@ class WalletMonitorService {
           instructionCount = txDetails.transaction.message.instructions.length;
           costLamports = txDetails.meta?.fee || 0;
 
-          // Try to detect if transaction went through Gateway (has 5+ instructions typically)
-          if (instructionCount >= 5) {
-            deliveryMethod = 'sanctum-sender'; // Likely Gateway transaction
-          } else if (instructionCount >= 3) {
-            deliveryMethod = 'jito'; // Possibly Jito
-          } else {
-            deliveryMethod = 'rpc'; // Standard RPC
-          }
+          // Wallet-monitored transactions: we can't determine actual delivery method
+          // Don't guess "sanctum-sender" - these aren't real Gateway transactions
+          deliveryMethod = 'unknown'; // Unknown delivery method (wallet monitoring)
         }
       } catch (detailError) {
         console.log(`[WalletMonitor] Could not fetch details for ${signature}, using basic info`);

@@ -1,9 +1,10 @@
 'use client';
 
-import { Play, Award, TrendingUp, Shield, Sparkles, Zap, Check } from 'lucide-react';
+import { Play, Award, TrendingUp, Shield, Sparkles, Zap, Check, Video } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useState } from 'react';
 import { FadeIn } from '@/components/animations/fade-in';
 import { ScaleIn } from '@/components/animations/scale-in';
@@ -11,10 +12,37 @@ import { Floating } from '@/components/animations/floating';
 import { StaggerContainer, StaggerItem } from '@/components/animations/stagger-container';
 
 export function VideoSectionEnhanced() {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [playingVideo, setPlayingVideo] = useState<string | null>(null);
 
-  // Replace with actual video URL when available
-  const videoUrl = 'https://www.youtube.com/embed/dQw4w9WgXcQ'; // Placeholder
+  // Video configurations
+  const videos = [
+    {
+      id: 'demo',
+      title: 'Product Demo',
+      description: 'Complete walkthrough of Gateway Insights features',
+      url: 'https://www.youtube.com/embed/KrnDXF7_W4Q',
+      duration: '2:40',
+      highlights: [
+        'Real-time wallet monitoring in action',
+        'Live transaction tracking via WebSocket',
+        'Cost comparison across delivery methods',
+        '17 interactive analytics charts',
+      ],
+    },
+    {
+      id: 'integration',
+      title: 'Gateway Integration',
+      description: 'Deep dive into Sanctum Gateway SDK integration',
+      url: 'https://www.youtube.com/embed/BIFKtY0w8gs',
+      duration: '2:51',
+      highlights: [
+        'buildGatewayTransaction implementation',
+        'sendTransaction flow explained',
+        'Mainnet transaction verification',
+        'Cost optimization strategies',
+      ],
+    },
+  ];
 
   const highlights = [
     {
@@ -38,13 +66,6 @@ export function VideoSectionEnhanced() {
       color: 'from-purple-500/20 to-purple-500/5',
       iconColor: 'text-purple-500',
     },
-  ];
-
-  const features = [
-    'Real-time wallet monitoring in action',
-    'Live transaction tracking via WebSocket',
-    'Cost comparison across delivery methods',
-    '17 interactive analytics charts',
   ];
 
   return (
@@ -80,104 +101,128 @@ export function VideoSectionEnhanced() {
 
           {/* Main Content Grid */}
           <div className="grid lg:grid-cols-5 gap-8 items-start">
-            {/* Video Player - Takes up 3 columns */}
+            {/* Video Player with Tabs - Takes up 3 columns */}
             <ScaleIn delay={0.2} className="lg:col-span-3">
-              <Card className="relative overflow-hidden group border-primary/20 shadow-2xl">
-                {/* Glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-purple-500/20 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
-
-                <div className="aspect-video bg-gradient-to-br from-primary/20 via-primary/10 to-background relative">
-                  {!isPlaying ? (
-                    /* Video Thumbnail/Placeholder */
-                    <div className="absolute inset-0 flex items-center justify-center backdrop-blur-sm bg-gradient-to-br from-background/90 via-background/80 to-background/90">
-                      <div className="text-center space-y-8 p-8">
-                        {/* Animated Play Button */}
-                        <div className="relative inline-block">
-                          {/* Ripple Rings */}
-                          {[...Array(3)].map((_, i) => (
-                            <div
-                              key={i}
-                              className="absolute inset-0 rounded-full border-2 border-primary animate-ping"
-                              style={{
-                                animationDelay: `${i * 0.3}s`,
-                                animationDuration: '2s',
-                              }}
-                            />
-                          ))}
-
-                          {/* Play Button */}
-                          <button
-                            onClick={() => setIsPlaying(true)}
-                            className="relative group/play"
-                            aria-label="Play video"
-                          >
-                            <div className="h-24 w-24 rounded-full bg-gradient-to-r from-primary to-primary/80 flex items-center justify-center shadow-2xl shadow-primary/50 transition-all duration-300 group-hover/play:scale-110 group-hover/play:shadow-primary/70">
-                              <Play className="h-12 w-12 text-primary-foreground ml-2" fill="currentColor" />
-                            </div>
-                          </button>
-                        </div>
-
-                        {/* Video Info */}
-                        <div className="space-y-3">
-                          <h3 className="text-2xl md:text-3xl font-bold">
-                            5-Minute Product Demo
-                          </h3>
-                          <p className="text-muted-foreground text-lg">
-                            Discover how Gateway Insights helps developers optimize Solana transactions
-                          </p>
-                        </div>
-
-                        {/* Stats Pills */}
-                        <div className="flex flex-wrap justify-center gap-4">
-                          <div className="px-4 py-2 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
-                            <div className="flex items-center gap-2">
-                              <Zap className="h-4 w-4 text-primary" />
-                              <span className="text-sm font-semibold">5:24 Duration</span>
-                            </div>
-                          </div>
-                          <div className="px-4 py-2 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
-                            <div className="flex items-center gap-2">
-                              <Shield className="h-4 w-4 text-primary" />
-                              <span className="text-sm font-semibold">1080p HD</span>
-                            </div>
-                          </div>
-                        </div>
+              <Tabs defaultValue="demo" className="w-full">
+                {/* Tabs List */}
+                <TabsList className="grid w-full grid-cols-2 mb-6 h-auto p-1 bg-muted/50 backdrop-blur-sm">
+                  {videos.map((video) => (
+                    <TabsTrigger
+                      key={video.id}
+                      value={video.id}
+                      className="flex items-center gap-2 py-3 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border data-[state=active]:border-primary/30"
+                    >
+                      <Video className="h-4 w-4" />
+                      <div className="text-left">
+                        <div className="font-semibold">{video.title}</div>
+                        <div className="text-xs opacity-70">{video.duration}</div>
                       </div>
-                    </div>
-                  ) : (
-                    /* Actual Video Embed */
-                    <iframe
-                      className="absolute inset-0 w-full h-full"
-                      src={`${videoUrl}?autoplay=1`}
-                      title="Gateway Insights Demo"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
-                  )}
-                </div>
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
 
-                {/* What You'll See Section */}
-                <div className="p-6 bg-gradient-to-b from-background/50 to-background backdrop-blur-sm">
-                  <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-primary" />
-                    What You'll See
-                  </h4>
-                  <StaggerContainer className="grid md:grid-cols-2 gap-3">
-                    {features.map((feature, index) => (
-                      <StaggerItem key={index}>
-                        <div className="flex items-start gap-3 group/item">
-                          <div className="h-6 w-6 rounded-full bg-gradient-to-r from-primary to-primary/60 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-lg shadow-primary/30 group-hover/item:scale-110 transition-transform">
-                            <Check className="h-3 w-3 text-primary-foreground" />
+                {/* Video Content */}
+                {videos.map((video) => (
+                  <TabsContent key={video.id} value={video.id} className="mt-0">
+                    <Card className="relative overflow-hidden group border-primary/20 shadow-2xl">
+                      {/* Glow effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-purple-500/20 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
+
+                      <div className="aspect-video bg-gradient-to-br from-primary/20 via-primary/10 to-background relative">
+                        {playingVideo !== video.id ? (
+                          /* Video Thumbnail/Placeholder */
+                          <div className="absolute inset-0 flex items-center justify-center backdrop-blur-sm bg-gradient-to-br from-background/90 via-background/80 to-background/90">
+                            <div className="text-center space-y-8 p-8">
+                              {/* Animated Play Button */}
+                              <div className="relative inline-block">
+                                {/* Ripple Rings */}
+                                {[...Array(3)].map((_, i) => (
+                                  <div
+                                    key={i}
+                                    className="absolute inset-0 rounded-full border-2 border-primary animate-ping"
+                                    style={{
+                                      animationDelay: `${i * 0.3}s`,
+                                      animationDuration: '2s',
+                                    }}
+                                  />
+                                ))}
+
+                                {/* Play Button */}
+                                <button
+                                  onClick={() => setPlayingVideo(video.id)}
+                                  className="relative group/play"
+                                  aria-label={`Play ${video.title}`}
+                                >
+                                  <div className="h-24 w-24 rounded-full bg-gradient-to-r from-primary to-primary/80 flex items-center justify-center shadow-2xl shadow-primary/50 transition-all duration-300 group-hover/play:scale-110 group-hover/play:shadow-primary/70">
+                                    <Play className="h-12 w-12 text-primary-foreground ml-2" fill="currentColor" />
+                                  </div>
+                                </button>
+                              </div>
+
+                              {/* Video Info */}
+                              <div className="space-y-3">
+                                <h3 className="text-2xl md:text-3xl font-bold">
+                                  {video.title}
+                                </h3>
+                                <p className="text-muted-foreground text-lg">
+                                  {video.description}
+                                </p>
+                              </div>
+
+                              {/* Stats Pills */}
+                              <div className="flex flex-wrap justify-center gap-4">
+                                <div className="px-4 py-2 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
+                                  <div className="flex items-center gap-2">
+                                    <Zap className="h-4 w-4 text-primary" />
+                                    <span className="text-sm font-semibold">{video.duration} Duration</span>
+                                  </div>
+                                </div>
+                                <div className="px-4 py-2 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
+                                  <div className="flex items-center gap-2">
+                                    <Shield className="h-4 w-4 text-primary" />
+                                    <span className="text-sm font-semibold">1080p HD</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                          <span className="text-sm text-muted-foreground group-hover/item:text-foreground transition-colors">
-                            {feature}
-                          </span>
-                        </div>
-                      </StaggerItem>
-                    ))}
-                  </StaggerContainer>
-                </div>
-              </Card>
+                        ) : (
+                          /* Actual Video Embed */
+                          <iframe
+                            className="absolute inset-0 w-full h-full"
+                            src={`${video.url}?autoplay=1`}
+                            title={video.title}
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          />
+                        )}
+                      </div>
+
+                      {/* What You'll See Section */}
+                      <div className="p-6 bg-gradient-to-b from-background/50 to-background backdrop-blur-sm">
+                        <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                          <Sparkles className="h-5 w-5 text-primary" />
+                          What You'll See
+                        </h4>
+                        <StaggerContainer className="grid md:grid-cols-2 gap-3">
+                          {video.highlights.map((feature, index) => (
+                            <StaggerItem key={index}>
+                              <div className="flex items-start gap-3 group/item">
+                                <div className="h-6 w-6 rounded-full bg-gradient-to-r from-primary to-primary/60 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-lg shadow-primary/30 group-hover/item:scale-110 transition-transform">
+                                  <Check className="h-3 w-3 text-primary-foreground" />
+                                </div>
+                                <span className="text-sm text-muted-foreground group-hover/item:text-foreground transition-colors">
+                                  {feature}
+                                </span>
+                              </div>
+                            </StaggerItem>
+                          ))}
+                        </StaggerContainer>
+                      </div>
+                    </Card>
+                  </TabsContent>
+                ))}
+              </Tabs>
             </ScaleIn>
 
             {/* Key Highlights Sidebar - Takes up 2 columns */}

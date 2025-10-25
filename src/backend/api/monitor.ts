@@ -87,11 +87,15 @@ router.get('/wallets', (_req: Request, res: Response) => {
   try {
     const monitorService = getWalletMonitorService();
     const wallets = monitorService.getMonitoredWallets();
+    const stats = monitorService.getWalletStats();
 
     return res.status(200).json({
       success: true,
       wallets,
       count: wallets.length,
+      currentCount: stats.currentCount,
+      maxWallets: stats.maxWallets,
+      canAddMore: stats.canAddMore,
     });
   } catch (error) {
     console.error('[API] Error getting monitored wallets:', error);

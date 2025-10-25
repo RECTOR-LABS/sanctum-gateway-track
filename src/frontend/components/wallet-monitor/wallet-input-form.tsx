@@ -1,13 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Wallet, CheckCircle2, XCircle } from 'lucide-react';
+import { Loader2, Wallet, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge';
 
 /**
  * Validates if a string is a valid Solana wallet address
@@ -47,6 +48,31 @@ export function WalletInputForm({ onMonitorStart, isMonitoring = false }: Wallet
   const [isValid, setIsValid] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [currentCount, setCurrentCount] = useState(0);
+  const [maxWallets, setMaxWallets] = useState(3);
+  const [canAddMore, setCanAddMore] = useState(true);
+
+  // Fetch wallet stats to check limits
+  const fetchWalletStats = async () => {
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${apiUrl}/api/monitor/wallets`);
+
+      if (response.ok) {
+        const data = await response.json();
+        setCurrentCount(data.currentCount || 0);
+        setMaxWallets(data.maxWallets || 3);
+        setCanAddMore(data.canAddMore ?? true);
+      }
+    } catch (error) {
+      console.error('Failed to fetch wallet stats:', error);
+    }
+  };
+
+  // Fetch stats on mount
+  useEffect(() => {
+    fetchWalletStats();
+  }, []);
 
   const handleAddressChange = (value: string) => {
     setWalletAddress(value.trim());
@@ -108,10 +134,13 @@ export function WalletInputForm({ onMonitorStart, isMonitoring = false }: Wallet
       const result = await response.json();
       setSubmitSuccess(true);
 
+      // Update wallet stats
+      await fetchWalletStats();
+
       // Show success toast
       const shortAddress = walletAddress.slice(0, 8) + '...' + walletAddress.slice(-8);
       toast.success('Monitoring Started', {
-        description: `Now tracking ${shortAddress}`,
+        description: `Now tracking ${shortAddress} (${result.currentCount || currentCount + 1}/${result.maxWallets || maxWallets})`,
         duration: 4000,
       });
 
@@ -144,12 +173,22 @@ export function WalletInputForm({ onMonitorStart, isMonitoring = false }: Wallet
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center gap-2">
-          <Wallet className="h-5 w-5 text-primary" />
-          <CardTitle>Monitor Wallet</CardTitle>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Wallet className="h-5 w-5 text-primary" />
+            <CardTitle>Monitor Wallet</CardTitle>
+          </div>
+          <Badge variant={canAddMore ? "secondary" : "destructive"}>
+            {currentCount}/{maxWallets} slots
+          </Badge>
         </div>
         <CardDescription>
           Enter any Solana wallet address to monitor transactions and analytics in real-time
+          {!canAddMore && (
+            <span className="block mt-1 text-destructive font-medium">
+              ⚠️ Limit reached - stop monitoring a wallet to add another
+            </span>
+          )}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -202,13 +241,18 @@ export function WalletInputForm({ onMonitorStart, isMonitoring = false }: Wallet
 
           <Button
             type="submit"
-            disabled={!isValid || isSubmitting || isMonitoring}
+            disabled={!isValid || isSubmitting || isMonitoring || !canAddMore}
             className="w-full"
           >
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Starting Monitor...
+              </>
+            ) : !canAddMore ? (
+              <>
+                <AlertTriangle className="mr-2 h-4 w-4" />
+                Limit Reached ({maxWallets}/{maxWallets})
               </>
             ) : (
               <>

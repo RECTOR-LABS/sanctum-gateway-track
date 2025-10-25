@@ -25,6 +25,7 @@ class WalletMonitorService {
   private readonly POLL_INTERVAL_MS = parseInt(process.env.POLL_INTERVAL_MS || '60000'); // Poll every 60 seconds (configurable)
   private readonly MAX_TRANSACTIONS_PER_POLL = parseInt(process.env.MAX_TRANSACTIONS_PER_POLL || '5'); // Fetch fewer transactions
   private readonly REQUEST_DELAY_MS = parseInt(process.env.REQUEST_DELAY_MS || '300'); // Delay between requests
+  private readonly MAX_WALLETS = parseInt(process.env.MAX_MONITORED_WALLETS || '3'); // Maximum wallets to monitor simultaneously
 
   constructor() {
     const rpcUrl = process.env.SOLANA_RPC_URL || 'https://api.mainnet-beta.solana.com';
@@ -34,7 +35,7 @@ class WalletMonitorService {
   /**
    * Add a wallet address to monitor
    */
-  async addWallet(address: string): Promise<{ success: boolean; message: string }> {
+  async addWallet(address: string): Promise<{ success: boolean; message: string; currentCount?: number; maxWallets?: number }> {
     try {
       // Validate address
       const publicKey = new PublicKey(address);
@@ -44,6 +45,18 @@ class WalletMonitorService {
         return {
           success: false,
           message: 'Wallet is already being monitored',
+          currentCount: this.monitoredWallets.size,
+          maxWallets: this.MAX_WALLETS,
+        };
+      }
+
+      // Check if max wallet limit reached
+      if (this.monitoredWallets.size >= this.MAX_WALLETS) {
+        return {
+          success: false,
+          message: `Maximum wallet limit reached (${this.MAX_WALLETS} wallets). Please stop monitoring another wallet first.`,
+          currentCount: this.monitoredWallets.size,
+          maxWallets: this.MAX_WALLETS,
         };
       }
 
@@ -68,6 +81,8 @@ class WalletMonitorService {
       return {
         success: true,
         message: 'Wallet monitoring started successfully',
+        currentCount: this.monitoredWallets.size,
+        maxWallets: this.MAX_WALLETS,
       };
     } catch (error) {
       console.error('[WalletMonitor] Error adding wallet:', error);
@@ -107,6 +122,17 @@ class WalletMonitorService {
       startedAt: wallet.startedAt,
       isActive: wallet.isActive,
     }));
+  }
+
+  /**
+   * Get current wallet count and limit
+   */
+  getWalletStats(): { currentCount: number; maxWallets: number; canAddMore: boolean } {
+    return {
+      currentCount: this.monitoredWallets.size,
+      maxWallets: this.MAX_WALLETS,
+      canAddMore: this.monitoredWallets.size < this.MAX_WALLETS,
+    };
   }
 
   /**

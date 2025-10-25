@@ -1,5 +1,6 @@
 import { WalletInputForm } from '@/components/wallet-monitor/wallet-input-form';
 import { MonitoredWalletsList } from '@/components/wallet-monitor/monitored-wallets-list';
+import { ExampleWallets } from '@/components/wallet-monitor/example-wallets';
 
 export default function MonitorPage() {
   return (
@@ -37,21 +38,6 @@ export default function MonitorPage() {
             </ol>
           </div>
 
-          <div className="rounded-lg border bg-muted/50 p-6">
-            <h3 className="text-lg font-semibold mb-2">Example wallets to try</h3>
-            <div className="space-y-2 text-sm">
-              <div>
-                <p className="font-medium">Sanctum Gateway Demo Wallet:</p>
-                <code className="text-xs bg-background px-2 py-1 rounded">
-                  REC1Vu7bLQTkSDhrKcn2nTj7PayLQxBmEV1juseQ3zc
-                </code>
-              </div>
-              <p className="text-muted-foreground mt-2">
-                This wallet has historical Gateway transactions you can analyze immediately
-              </p>
-            </div>
-          </div>
-
           <div className="rounded-lg border bg-blue-50 dark:bg-blue-950 p-6">
             <h3 className="text-lg font-semibold mb-2 text-blue-900 dark:text-blue-100">
               Benefits
@@ -66,6 +52,9 @@ export default function MonitorPage() {
           </div>
         </div>
       </div>
+
+      {/* Example Wallets */}
+      <ExampleWallets />
 
       {/* Monitored Wallets List */}
       <MonitoredWalletsList />

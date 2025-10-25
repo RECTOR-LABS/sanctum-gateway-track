@@ -41,7 +41,7 @@ export function RealTimeTransactionFeed({
           // Show toast notification for new transaction
           const sigShort = newTx.signature.slice(0, 8) + '...' + newTx.signature.slice(-8);
           const deliveryMethod = newTx.delivery_method || 'Unknown';
-          const status = newTx.status === 'success' ? '✅' : newTx.status === 'failed' ? '❌' : '⏳';
+          const status = newTx.status === 'confirmed' ? '✅' : newTx.status === 'failed' ? '❌' : '⏳';
 
           toast.success(`New Transaction ${status}`, {
             description: `${sigShort} via ${deliveryMethod}`,

@@ -14,7 +14,7 @@ export interface Transaction {
   blockhash?: string;
   last_valid_block_height?: number;
   slot?: number;
-  block_time?: number;
+  block_time?: string;
   instruction_count: number;
   signer_pubkey: string;
   error_code?: string;

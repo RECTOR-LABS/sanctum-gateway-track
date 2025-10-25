@@ -6,6 +6,7 @@ import { getWebSocketService } from './services/websocket-service.js';
 import { testDatabaseConnection } from './database/config.js';
 import analyticsRouter from './api/analytics.js';
 import monitorRouter from './api/monitor.js';
+import demoRouter from './api/demoRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -36,6 +37,7 @@ app.get('/health', async (_req, res) => {
 // Mount API routers
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/monitor', monitorRouter);
+app.use('/api/demo', demoRouter);
 
 // API root endpoint
 app.get('/api', (_req, res) => {
@@ -47,6 +49,7 @@ app.get('/api', (_req, res) => {
       api: '/api',
       analytics: '/api/analytics/*',
       monitor: '/api/monitor/*',
+      demo: '/api/demo/*',
       websocket: 'ws://localhost:' + PORT,
     },
     analytics_endpoints: {
@@ -62,6 +65,10 @@ app.get('/api', (_req, res) => {
       start_monitoring: 'POST /api/monitor/wallet',
       stop_monitoring: 'DELETE /api/monitor/wallet/:address',
       get_monitored_wallets: 'GET /api/monitor/wallets',
+    },
+    demo_endpoints: {
+      start_demo: 'POST /api/demo/start',
+      demo_status: 'GET /api/demo/status',
     },
   });
 });

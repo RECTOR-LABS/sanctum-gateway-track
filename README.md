@@ -138,6 +138,26 @@ Without Gateway, we'd need to integrate separately with:
 
 **With Gateway**: Get the safety net of Jito + the cost efficiency of RPC through intelligent routing and automatic refunds.
 
+#### 2a. **Gateway's Tip Model: 10x More Affordable Than Competitors**
+
+Like other smart transaction routers (Circular FAST, Triton Cascade), Gateway uses a **tip-based pricing model** - but at **dramatically lower costs**:
+
+| Feature | **Sanctum Gateway** | **Circular FAST** | **Triton RPC** |
+|---------|---------------------|-------------------|----------------|
+| **Tip per Transaction** | **0.0001 SOL** (Sanctum Sender) | 0.001 SOL (minimum) | Variable (via priority fees) |
+| **Cost Comparison** | **Baseline** | **10x more expensive** | Depends on configuration |
+| **Tip Structure** | Automatic via `buildGatewayTransaction` | Manual - developer adds transfer instruction | Manual - client controls priority fees |
+| **Who Pays** | Failed txs may not be charged* | No charge if transaction fails | You pay configured priority fees |
+
+**Real-World Cost Impact** (10,000 transactions):
+- **Sanctum Gateway**: 1 SOL = ~$190 (at $190/SOL)
+- **Circular FAST**: 10 SOL = ~$1,900
+- **Savings**: **$1,710 or 90% cheaper** than Circular 🎉
+
+**Developer Experience Advantage**: Unlike competitors where you must manually construct tip transfer instructions, Gateway **automatically adds tip and optimization instructions** via `buildGatewayTransaction` - transforming your simple transaction into an optimized multi-instruction transaction without extra code.
+
+*Note: Gateway's refund policy for failed transactions needs verification. Circular FAST explicitly states no charge for failed transactions.
+
 #### 3. **Comprehensive Observability**
 Tracking transactions across multiple delivery methods requires:
 - Separate RPC polling for each provider

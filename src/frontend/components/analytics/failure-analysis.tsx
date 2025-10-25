@@ -168,11 +168,11 @@ export function FailureAnalysis({ errors, failureRateByMethod, isLoading }: Fail
                         {getDeliveryMethodName(method.delivery_method as DeliveryMethod)}
                       </div>
                       <Badge variant={isHighFailure ? 'destructive' : 'secondary'}>
-                        {failureRate.toFixed(1)}% failure
+                        {(Number.isNaN(failureRate) || !Number.isFinite(failureRate) ? 0 : failureRate).toFixed(1)}% failure
                       </Badge>
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      {method.failed_count} of {method.total_count} transactions failed
+                      {Number(method.failed_count) || 0} of {Number(method.total_count) || 0} transactions failed
                     </div>
                   </div>
                 );

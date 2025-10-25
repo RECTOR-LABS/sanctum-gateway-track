@@ -128,9 +128,10 @@ export default function AnalyticsPage() {
 
         {/* Cost Analysis Section */}
         <div id="cost-analysis" className="space-y-6 scroll-mt-24">
-        <div>
           <h2 className="text-2xl font-semibold mb-4">Cost Analysis</h2>
-          <div className="grid gap-6 md:grid-cols-2">
+
+          {/* Vertical Layout: Cost Breakdown on top, Savings Calculator below */}
+          <div className="space-y-6">
             <CostBreakdown
               data={overview}
               isLoading={!overview && !overviewError}
@@ -140,7 +141,6 @@ export default function AnalyticsPage() {
               isLoading={!costComparison && !costError}
             />
           </div>
-        </div>
 
         <CostTrend
           jitoData={jitoTrends}

@@ -156,7 +156,7 @@ export default function AnalyticsPage() {
             errors={topErrors}
             failureRateByMethod={methodMetrics?.map(m => ({
               delivery_method: m.delivery_method,
-              failure_rate: ((m.failed_count / m.total_count) * 100),
+              failure_rate: m.total_count > 0 ? ((m.failed_count / m.total_count) * 100) : 0,
               failed_count: m.failed_count,
               total_count: m.total_count,
             }))}

@@ -100,7 +100,8 @@ export function useWebSocket(options: UseWebSocketOptions) {
       };
 
       ws.onerror = (error) => {
-        console.error('[WebSocket] Error:', error);
+        // WebSocket errors often have minimal info, log connection state instead
+        console.error('[WebSocket] Connection error - Ready State:', ws.readyState, 'URL:', url);
         onError?.(error);
       };
 

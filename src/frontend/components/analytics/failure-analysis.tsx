@@ -153,7 +153,9 @@ export function FailureAnalysis({ errors, failureRateByMethod, isLoading }: Fail
             <h4 className="text-sm font-medium mb-3">Failure Rate by Delivery Method</h4>
             <div className="space-y-3">
               {failureRateByMethod.map((method) => {
-                const isHighFailure = method.failure_rate > 10;
+                // Guard against NaN values
+                const failureRate = Number.isNaN(method.failure_rate) ? 0 : method.failure_rate;
+                const isHighFailure = failureRate > 10;
                 return (
                   <div
                     key={method.delivery_method}
@@ -166,7 +168,7 @@ export function FailureAnalysis({ errors, failureRateByMethod, isLoading }: Fail
                         {getDeliveryMethodName(method.delivery_method as DeliveryMethod)}
                       </div>
                       <Badge variant={isHighFailure ? 'destructive' : 'secondary'}>
-                        {method.failure_rate.toFixed(1)}% failure
+                        {failureRate.toFixed(1)}% failure
                       </Badge>
                     </div>
                     <div className="text-sm text-muted-foreground">

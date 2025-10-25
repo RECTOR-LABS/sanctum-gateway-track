@@ -1,16 +1,23 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { MainLayout } from "@/components/layout/main-layout";
+import { ConditionalLayout } from "@/components/layout/conditional-layout";
 import { Toaster } from "sonner";
-
-const inter = Inter({ subsets: ["latin"] });
+import { inter, instrumentSans } from "@/lib/fonts";
+import { PitchDeckFAB } from "@/components/ui/pitch-deck-fab";
+import { HomeFAB } from "@/components/ui/home-fab";
 
 export const metadata: Metadata = {
   title: "Gateway Insights - Sanctum Transaction Analytics",
   description: "Production-grade transaction analytics platform for Solana developers. Real-time tracking, cost analysis, and Gateway integration insights.",
   keywords: ["Solana", "Gateway", "Sanctum", "Transaction Analytics", "Blockchain"],
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
 };
 
 export default function RootLayout({
@@ -20,14 +27,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={`${inter.variable} ${instrumentSans.variable} font-sans antialiased`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
-          <MainLayout>{children}</MainLayout>
+          <ConditionalLayout>{children}</ConditionalLayout>
+          <PitchDeckFAB />
+          <HomeFAB />
           <Toaster position="top-right" richColors />
         </ThemeProvider>
       </body>

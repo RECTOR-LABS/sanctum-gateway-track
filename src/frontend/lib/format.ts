@@ -15,6 +15,56 @@ export function formatSol(lamports: number, decimals: number = 6): string {
 }
 
 /**
+ * Format SOL amount intelligently (compact for small numbers)
+ * - For amounts >= 0.001 SOL: show 6 decimals (e.g., "0.005432 SOL")
+ * - For amounts < 0.001 SOL: show in lamports (e.g., "89,000 lamports")
+ * - For zero: show "0 SOL"
+ */
+export function formatSolSmart(lamports: number): string {
+  if (lamports === 0) return '0 SOL';
+
+  const sol = lamportsToSol(lamports);
+
+  // For amounts >= 0.001 SOL (1 million lamports), show in SOL
+  if (sol >= 0.001) {
+    return `${sol.toFixed(6)} SOL`;
+  }
+
+  // For smaller amounts, show in lamports with comma separators
+  return `${lamports.toLocaleString()} lamports`;
+}
+
+/**
+ * Format SOL amount for cost displays (single line, no wrapping)
+ * - Uses compact notation for very small numbers
+ * - Example: 0.000089 SOL → "89 μSOL" (micro-SOL)
+ */
+export function formatSolCompact(lamports: number): string {
+  if (lamports === 0) return '0 SOL';
+
+  const sol = lamportsToSol(lamports);
+
+  // >= 0.1 SOL: show with 4 decimals
+  if (sol >= 0.1) {
+    return `${sol.toFixed(4)} SOL`;
+  }
+
+  // >= 0.001 SOL: show with 6 decimals
+  if (sol >= 0.001) {
+    return `${sol.toFixed(6)} SOL`;
+  }
+
+  // < 0.001 SOL: show in microSOL (μSOL = SOL × 1,000,000)
+  const microSol = sol * 1_000_000;
+  if (microSol >= 0.1) {
+    return `${microSol.toFixed(2)} μSOL`;
+  }
+
+  // Very tiny amounts: show in nanoSOL (nSOL = SOL × 1,000,000,000 = lamports)
+  return `${lamports} nSOL`;
+}
+
+/**
  * Format transaction signature (truncate middle)
  */
 export function formatSignature(signature: string, length: number = 16): string {

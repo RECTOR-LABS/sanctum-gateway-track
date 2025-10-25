@@ -19,6 +19,8 @@ export function MonitoredWalletsList() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [removingWallet, setRemovingWallet] = useState<string | null>(null);
+  const [maxWallets, setMaxWallets] = useState(3);
+  const [canAddMore, setCanAddMore] = useState(true);
 
   // Fetch monitored wallets
   const fetchWallets = async () => {
@@ -35,6 +37,8 @@ export function MonitoredWalletsList() {
 
       const data = await response.json();
       setWallets(data.wallets || []);
+      setMaxWallets(data.maxWallets || 3);
+      setCanAddMore(data.canAddMore ?? true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch wallets');
     } finally {
@@ -127,12 +131,18 @@ export function MonitoredWalletsList() {
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center gap-2">
-          <List className="h-5 w-5 text-primary" />
-          <CardTitle>Monitored Wallets</CardTitle>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <List className="h-5 w-5 text-primary" />
+            <CardTitle>Monitored Wallets</CardTitle>
+          </div>
+          <Badge variant={canAddMore ? "secondary" : "destructive"}>
+            {wallets.length}/{maxWallets} wallets
+          </Badge>
         </div>
         <CardDescription>
-          {wallets.length} {wallets.length === 1 ? 'wallet' : 'wallets'} currently being tracked
+          {wallets.length} of {maxWallets} wallet slots being used
+          {!canAddMore && <span className="text-destructive ml-1">(limit reached)</span>}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">

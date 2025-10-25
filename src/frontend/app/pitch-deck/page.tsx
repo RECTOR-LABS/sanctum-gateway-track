@@ -559,7 +559,7 @@ const signature = await gatewayClient.sendTransaction(
           <StaggerContainer staggerDelay={0.12} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card className="border-primary/30 hover:border-primary transition-colors">
               <CardHeader>
-                <Badge className="w-fit mb-2 bg-primary/10">Unique</Badge>
+                <Badge className="w-fit mb-2 bg-primary/10 text-primary border-primary/30">Unique</Badge>
                 <CardTitle>Real-time Wallet Monitoring</CardTitle>
               </CardHeader>
               <CardContent>
@@ -571,7 +571,7 @@ const signature = await gatewayClient.sendTransaction(
 
             <Card className="border-primary/30 hover:border-primary transition-colors">
               <CardHeader>
-                <Badge className="w-fit mb-2 bg-primary/10">Advanced</Badge>
+                <Badge className="w-fit mb-2 bg-primary/10 text-primary border-primary/30">Advanced</Badge>
                 <CardTitle>3-Way Cost Comparison</CardTitle>
               </CardHeader>
               <CardContent>
@@ -583,7 +583,7 @@ const signature = await gatewayClient.sendTransaction(
 
             <Card className="border-primary/30 hover:border-primary transition-colors">
               <CardHeader>
-                <Badge className="w-fit mb-2 bg-primary/10">Simulated</Badge>
+                <Badge className="w-fit mb-2 bg-primary/10 text-primary border-primary/30">Simulated</Badge>
                 <CardTitle>Gateway Savings Simulator</CardTitle>
               </CardHeader>
               <CardContent>
@@ -595,7 +595,7 @@ const signature = await gatewayClient.sendTransaction(
 
             <Card className="border-primary/30 hover:border-primary transition-colors">
               <CardHeader>
-                <Badge className="w-fit mb-2 bg-primary/10">Real-time</Badge>
+                <Badge className="w-fit mb-2 bg-primary/10 text-primary border-primary/30">Real-time</Badge>
                 <CardTitle>Alert System</CardTitle>
               </CardHeader>
               <CardContent>
@@ -607,7 +607,7 @@ const signature = await gatewayClient.sendTransaction(
 
             <Card className="border-primary/30 hover:border-primary transition-colors">
               <CardHeader>
-                <Badge className="w-fit mb-2 bg-primary/10">Flexible</Badge>
+                <Badge className="w-fit mb-2 bg-primary/10 text-primary border-primary/30">Flexible</Badge>
                 <CardTitle>Data Export</CardTitle>
               </CardHeader>
               <CardContent>
@@ -619,7 +619,7 @@ const signature = await gatewayClient.sendTransaction(
 
             <Card className="border-primary/30 hover:border-primary transition-colors">
               <CardHeader>
-                <Badge className="w-fit mb-2 bg-primary/10">Comprehensive</Badge>
+                <Badge className="w-fit mb-2 bg-primary/10 text-primary border-primary/30">Comprehensive</Badge>
                 <CardTitle>17 Interactive Charts</CardTitle>
               </CardHeader>
               <CardContent>

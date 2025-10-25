@@ -128,7 +128,7 @@ class APIClient {
   }
 
   async getTrends(
-    type: 'transactions' | 'success_rate' | 'cost' | 'volume',
+    type: 'transactions' | 'success_rate' | 'cost',
     interval: 'hour' | 'day' = 'hour',
     deliveryMethod?: string,
     startDate?: string,
@@ -184,6 +184,15 @@ class APIClient {
 
     const response = await this.fetch<APIResponse<any[]>>(
       `/api/analytics/errors?${params.toString()}`
+    );
+
+    return response.data;
+  }
+
+  // Alerts
+  async getAlerts(): Promise<any[]> {
+    const response = await this.fetch<APIResponse<any[]>>(
+      `/api/analytics/alerts`
     );
 
     return response.data;

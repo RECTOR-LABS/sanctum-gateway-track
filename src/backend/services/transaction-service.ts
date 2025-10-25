@@ -12,8 +12,6 @@ import {
 } from '../gateway/transaction.js';
 import {
   createTransaction,
-  updateTransaction,
-  getTransactionBySignature,
 } from '../database/dal/transaction-dal.js';
 import type { CreateTransactionInput } from '../database/types/index.js';
 import { getWebSocketService } from './websocket-service.js';
@@ -111,7 +109,7 @@ export class TransactionService {
         signer_pubkey: signer.publicKey.toBase58(),
         error_code: errorCode,
         error_message: errorMessage,
-        project_id: null, // Multi-project support in Epic 5
+        project_id: undefined, // Multi-project support in Epic 5
         raw_transaction_data: {
           instructions: transaction.instructions.length,
           feePayer: signer.publicKey.toBase58(),

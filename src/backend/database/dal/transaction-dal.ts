@@ -5,14 +5,14 @@
  * All database queries go through this layer for consistency and maintainability.
  */
 
-import { pool } from '../config';
+import { pool } from '../config.js';
 import {
   Transaction,
   CreateTransactionInput,
   UpdateTransactionInput,
   TransactionFilter,
   PaginatedResponse,
-} from '../types';
+} from '../types/index.js';
 
 /**
  * Create a new transaction record

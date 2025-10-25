@@ -677,6 +677,65 @@ Connect to: `ws://localhost:3001`
 
 ---
 
+## 💰 Cost Comparison Methodology
+
+Gateway Insights tracks actual transaction costs and performance in real-time. Cost savings calculations compare actual Gateway costs against market-based estimates for alternative approaches:
+
+### Comparison Baselines
+
+**Gateway Costs (Actual)**
+- Retrieved from database: real transaction costs paid
+- Includes: base fees + tips + network fees
+- Reflects: actual costs incurred via Gateway API
+
+**Direct Jito Costs (Estimated)**
+- Assumes conservative **0.001 SOL average tip** per transaction
+- Market rate range: 0.0001-0.01 SOL (varies with network congestion)
+- Used for: "What would this cost with direct Jito submission?"
+
+**Direct RPC Costs (Accurate)**
+- Uses Solana's fixed **0.000005 SOL network fee** per signature
+- This is a protocol constant, not an estimate
+- Used for: "What would this cost with basic RPC submission?"
+
+### Why These Numbers?
+
+1. **Gateway Costs are Real Data**: Every transaction's actual cost is logged to the database and displayed accurately.
+
+2. **Jito Tips are Estimates**: Jito doesn't expose historical tip data easily, and actual tips vary based on:
+   - Network congestion
+   - Bundle competition
+   - Time of day
+   - Transaction priority needs
+
+   We use 0.001 SOL as a **conservative mid-range estimate**. Actual savings may be higher if you would have needed larger tips.
+
+3. **RPC Fees are Constants**: Solana's protocol fee of 5,000 lamports (0.000005 SOL) per signature is fixed and accurate.
+
+### Interpretation
+
+**Savings Percentage**
+- Calculated as: `(Direct Jito Cost - Gateway Cost) / Direct Jito Cost × 100%`
+- Example: 90.91% savings means Gateway costs ~10% of what direct Jito would cost
+- This demonstrates Gateway's value proposition: dual-submission with automatic tip refunds
+
+**Why Gateway Can Be More Expensive Than RPC**
+- Basic RPC: No guarantees, no observability, no routing intelligence
+- Gateway: Jito integration + routing + observability + refunds + reliability features
+- Value proposition: Reliability and features, not just cost reduction
+
+### Disclaimer
+
+Actual cost savings will vary based on:
+- Network conditions at time of transaction
+- Required Jito tip amounts for your use case
+- Success rate differences between delivery methods
+- Your specific transaction patterns
+
+Gateway Insights provides directionally accurate comparisons using reasonable market assumptions. The headline metric (e.g., "90.91% savings") is based on these conservative estimates.
+
+---
+
 ## 🎨 Features Showcase
 
 ### 1. Real-time Dashboard

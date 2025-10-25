@@ -17,7 +17,7 @@ app.use(cors());
 app.use(express.json());
 
 // Health check endpoint
-app.get('/health', async (req, res) => {
+app.get('/health', async (_req, res) => {
   const dbConnected = await testDatabaseConnection();
 
   res.json({
@@ -36,7 +36,7 @@ app.get('/health', async (req, res) => {
 app.use('/api/analytics', analyticsRouter);
 
 // API root endpoint
-app.get('/api', (req, res) => {
+app.get('/api', (_req, res) => {
   res.json({
     message: 'Gateway Insights API',
     version: '1.0.0',

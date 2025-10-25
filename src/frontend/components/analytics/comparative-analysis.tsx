@@ -79,6 +79,23 @@ export function ComparativeAnalysis({ data, isLoading }: ComparativeAnalysisProp
 
   const { gateway, direct_jito, direct_rpc } = data;
 
+  // Safety check: ensure data structure is valid
+  if (!gateway || !direct_jito || !direct_rpc) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Gateway Value Analysis</CardTitle>
+          <CardDescription>Before & after comparison - Gateway advantage</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">
+            Insufficient data for comparative analysis. Need more transaction history.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   // Calculate savings
   const savingsVsJito = {
     cost: direct_jito.estimated_cost_sol - gateway.total_cost_sol,

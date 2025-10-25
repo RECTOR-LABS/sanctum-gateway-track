@@ -17,7 +17,7 @@ export type CuPriceLevel = 'low' | 'median' | 'high';
 export type JitoTipLevel = 'low' | 'median' | 'high' | 'max';
 
 // Delivery methods supported by Gateway
-export type DeliveryMethod = 'rpc' | 'jito' | 'triton' | 'paladin';
+export type DeliveryMethod = 'rpc' | 'jito' | 'triton' | 'paladin' | 'sanctum-sender' | 'unknown';
 
 // Transaction optimization parameters
 export interface OptimizeTransactionParams {

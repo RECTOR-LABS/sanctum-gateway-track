@@ -5,13 +5,13 @@
  * Handles aggregations, time-series data, and cost comparisons.
  */
 
-import { pool, redisClient } from '../config';
+import { pool, redisClient } from '../config.js';
 import {
   AnalyticsMetrics,
   TimeSeriesDataPoint,
   CostComparison,
   DeliveryMethod,
-} from '../types';
+} from '../types/index.js';
 
 /**
  * Lamports to SOL conversion constant
@@ -302,8 +302,9 @@ export async function getCostComparison(
 
   const totalTransactions = parseInt(row.total_transactions, 10);
   const gatewayCostLamports = parseInt(row.total_cost_lamports, 10);
-  const totalTipsLamports = parseInt(row.total_tips_lamports, 10);
-  const refundedTipsLamports = parseInt(row.refunded_tips_lamports, 10);
+  // Note: totalTipsLamports and refundedTipsLamports calculated but not currently used
+  // const totalTipsLamports = parseInt(row.total_tips_lamports, 10);
+  // const refundedTipsLamports = parseInt(row.refunded_tips_lamports, 10);
 
   // Actual Gateway cost (in SOL)
   const gatewayCostSol = gatewayCostLamports / LAMPORTS_PER_SOL;

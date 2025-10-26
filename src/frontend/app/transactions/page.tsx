@@ -26,60 +26,54 @@ export default function TransactionsPage() {
     { refreshInterval: 30000 } // Refresh every 30 seconds
   );
 
+  // Fetch total costs across ALL transactions
+  const { data: costsData } = useSWR(
+    'analytics-costs',
+    async () => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/analytics/costs`);
+      if (!response.ok) throw new Error('Failed to fetch costs');
+      const json = await response.json();
+      return json.data;
+    },
+    { refreshInterval: 30000 } // Refresh every 30 seconds
+  );
+
   const initialTransactions = transactionsResponse?.data || [];
   const pagination = transactionsResponse?.pagination;
 
   const totalPages = pagination ? Math.ceil(pagination.total / pagination.limit) : 1;
   const currentPage = page;
 
-  // Calculate comprehensive Gateway cost comparison
-  const GATEWAY_FEE_LAMPORTS = 100_000; // 0.0001 SOL
-  const JITO_FEE_LAMPORTS = 1_000_000; // 0.001 SOL (typical Jito cost for MEV protection)
-
+  // Use total costs across ALL transactions from API
   const costComparison = useMemo(() => {
-    if (!initialTransactions.length) return {
+    if (!costsData || !pagination) return {
       count: 0,
-      vsActual: { lamports: 0, sol: 0 },
-      vsJito: { lamports: 0, sol: 0 },
-      totalGatewayCost: { lamports: 0, sol: 0 },
-      totalJitoCost: { lamports: 0, sol: 0 },
-      totalActualCost: { lamports: 0, sol: 0 },
+      totalActualCost: { sol: 0 },
+      totalJitoCost: { sol: 0 },
+      totalGatewayCost: { sol: 0 },
+      vsActual: { sol: 0 },
+      vsJito: { sol: 0 },
     };
 
-    const totalActualCost = initialTransactions.reduce((sum, tx) => sum + tx.cost_lamports, 0);
-    const totalGatewayCost = initialTransactions.length * GATEWAY_FEE_LAMPORTS;
-    const totalJitoCost = initialTransactions.length * JITO_FEE_LAMPORTS;
+    const totalActualCost = costsData.direct_rpc_cost_sol || 0;
+    const totalJitoCost = costsData.direct_jito_cost_sol || 0;
+    const totalGatewayCost = costsData.gateway_cost_sol || 0;
 
-    // Savings vs actual cost (can be negative - Gateway more expensive for micro txs)
+    // Savings vs actual cost (Gateway more expensive but adds MEV protection)
     const savingsVsActual = totalActualCost - totalGatewayCost;
 
-    // Savings vs always-using-Jito (should be positive - Gateway cheaper than Jito)
-    const savingsVsJito = totalJitoCost - totalGatewayCost;
+    // Savings vs always-using-Jito (Gateway cheaper than Jito)
+    const savingsVsJito = costsData.savings_vs_jito_sol || 0;
 
     return {
-      count: initialTransactions.length,
-      vsActual: {
-        lamports: savingsVsActual,
-        sol: savingsVsActual / 1_000_000_000,
-      },
-      vsJito: {
-        lamports: savingsVsJito,
-        sol: savingsVsJito / 1_000_000_000,
-      },
-      totalGatewayCost: {
-        lamports: totalGatewayCost,
-        sol: totalGatewayCost / 1_000_000_000,
-      },
-      totalJitoCost: {
-        lamports: totalJitoCost,
-        sol: totalJitoCost / 1_000_000_000,
-      },
-      totalActualCost: {
-        lamports: totalActualCost,
-        sol: totalActualCost / 1_000_000_000,
-      },
+      count: pagination.total || 0, // Total transactions across all pages
+      totalActualCost: { sol: totalActualCost },
+      totalJitoCost: { sol: totalJitoCost },
+      totalGatewayCost: { sol: totalGatewayCost },
+      vsActual: { sol: savingsVsActual },
+      vsJito: { sol: savingsVsJito },
     };
-  }, [initialTransactions]);
+  }, [costsData, pagination]);
 
   const handlePreviousPage = () => {
     if (page > 1) {
@@ -166,7 +160,9 @@ export default function TransactionsPage() {
 
             {/* Summary Stats */}
             <div className="pt-4 border-t border-blue-200 dark:border-blue-800">
-              <p className="text-sm text-blue-600 dark:text-blue-400 mb-2">Summary for {costComparison.count} transactions:</p>
+              <p className="text-sm text-blue-600 dark:text-blue-400 mb-2">
+                <strong>Total across all {costComparison.count.toLocaleString()} transactions:</strong>
+              </p>
               <div className="grid gap-2 text-sm">
                 <div className="flex items-center gap-2">
                   <span className="text-gray-600 dark:text-gray-400">•</span>

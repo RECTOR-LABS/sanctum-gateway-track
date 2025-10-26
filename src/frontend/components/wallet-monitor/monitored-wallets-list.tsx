@@ -7,6 +7,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { List, X, CheckCircle2, Clock } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
+import { formatRelativeTime } from '@/lib/format';
 
 interface MonitoredWallet {
   address: string;
@@ -132,21 +133,6 @@ export function MonitoredWalletsList() {
     }
   };
 
-  // Format date
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    const diffHours = Math.floor(diffMins / 60);
-    if (diffHours < 24) return `${diffHours}h ago`;
-    const diffDays = Math.floor(diffHours / 24);
-    return `${diffDays}d ago`;
-  };
-
   // Load wallets on mount
   useEffect(() => {
     fetchWallets();
@@ -268,7 +254,7 @@ export function MonitoredWalletsList() {
 
                       <div className="flex items-center gap-1 text-xs text-muted-foreground">
                         <Clock className="h-3 w-3" />
-                        Started {formatDate(wallet.startedAt)}
+                        Started {formatRelativeTime(wallet.startedAt)}
                         {wallet.stopReason === 'limit-reached' && (
                           <span className="ml-2 text-orange-600 dark:text-orange-400 font-medium">
                             • Auto-stopped at {wallet.transactionCount} transactions

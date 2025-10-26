@@ -15,6 +15,7 @@ import {
   DollarSign,
 } from 'lucide-react';
 import { CardLoadingState } from '@/components/ui/loading-state';
+import { formatRelativeTime } from '@/lib/format';
 
 export interface Alert {
   id: string;
@@ -280,21 +281,6 @@ export function AlertSystem({
     }
   };
 
-  const formatTimestamp = (timestamp: string) => {
-    const date = new Date(timestamp);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
-    return date.toLocaleDateString();
-  };
-
   const renderAlert = (alert: Alert) => {
     const severityConfig = getSeverityConfig(alert.severity);
     const SeverityIcon = severityConfig.icon;
@@ -320,7 +306,7 @@ export function AlertSystem({
                 </div>
               </div>
               <div className="text-xs text-muted-foreground whitespace-nowrap">
-                {formatTimestamp(alert.created_at)}
+                {formatRelativeTime(alert.created_at)}
               </div>
             </div>
 

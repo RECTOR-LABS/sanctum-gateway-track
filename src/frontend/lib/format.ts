@@ -74,17 +74,24 @@ export function formatSignature(signature: string, length: number = 16): string 
 }
 
 /**
- * Format timestamp to relative time
+ * Format timestamp to relative time (timezone-aware)
+ * Handles both UTC timestamps from backend and ensures correct calculation
+ * regardless of user's local timezone
  */
 export function formatRelativeTime(timestamp: string): string {
-  const date = new Date(timestamp);
+  // Parse timestamp - if it doesn't end with Z, it's likely UTC from backend
+  const timestampStr = timestamp.endsWith('Z') ? timestamp : `${timestamp}Z`;
+  const date = new Date(timestampStr);
   const now = new Date();
+
+  // Both dates are now in UTC, calculate difference in milliseconds
   const diffMs = now.getTime() - date.getTime();
   const diffSec = Math.floor(diffMs / 1000);
   const diffMin = Math.floor(diffSec / 60);
   const diffHour = Math.floor(diffMin / 60);
   const diffDay = Math.floor(diffHour / 24);
 
+  if (diffSec < 0) return 'Just now'; // Future timestamp
   if (diffSec < 60) return `${diffSec}s ago`;
   if (diffMin < 60) return `${diffMin}m ago`;
   if (diffHour < 24) return `${diffHour}h ago`;
@@ -92,11 +99,24 @@ export function formatRelativeTime(timestamp: string): string {
 }
 
 /**
- * Format absolute timestamp
+ * Format absolute timestamp (timezone-aware)
+ * Displays in user's local timezone with locale-specific formatting
  */
 export function formatTimestamp(timestamp: string): string {
-  const date = new Date(timestamp);
-  return date.toLocaleString();
+  // Parse timestamp - if it doesn't end with Z, it's likely UTC from backend
+  const timestampStr = timestamp.endsWith('Z') ? timestamp : `${timestamp}Z`;
+  const date = new Date(timestampStr);
+
+  // toLocaleString automatically converts UTC to user's local timezone
+  return date.toLocaleString(undefined, {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  });
 }
 
 /**

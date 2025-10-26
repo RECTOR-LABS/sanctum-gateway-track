@@ -8,7 +8,8 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-15.5-black)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.1-blue)](https://reactjs.org/)
-[![Production Ready](https://img.shields.io/badge/Production%20Ready-95%25-green)](/)
+[![Production Deployed](https://img.shields.io/badge/Production%20Deployed-100%25-success)](https://sanctum.rectorspace.com)
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-Auto--Deploy-brightgreen)](/.github/workflows/deploy.yml)
 
 </div>
 
@@ -41,9 +42,14 @@ Gateway Insights provides:
 
 ## 🚀 Live Demo
 
-**🌐 Production URL**: [Coming Soon - Deployment in Progress]
+**🌐 Production URLs**:
+- **Frontend**: [https://sanctum.rectorspace.com](https://sanctum.rectorspace.com) ✅ **LIVE**
+- **Backend API**: [https://api.sanctum.rectorspace.com](https://api.sanctum.rectorspace.com) ✅ **LIVE**
+- **Build Info**: [https://sanctum.rectorspace.com/api/build-info](https://sanctum.rectorspace.com/api/build-info)
 
 **📹 Video Demo**: [Coming Soon - 3-minute walkthrough]
+
+**📊 Real Data**: 513 transactions migrated from Supabase, 73.7% success rate
 
 **🖼️ Screenshots**:
 

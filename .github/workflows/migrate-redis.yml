@@ -1,0 +1,68 @@
+name: Migrate Redis to Local VPS
+
+on:
+  workflow_dispatch:  # Manual trigger only
+
+jobs:
+  migrate-redis:
+    name: Install Redis on VPS and Migrate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Make migration script executable
+        run: chmod +x scripts/setup-redis-vps.sh
+
+      - name: Transfer migration script to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          source: scripts/setup-redis-vps.sh
+          target: /tmp/
+
+      - name: Execute Redis migration on VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          script: |
+            echo "🚀 Starting Redis migration..."
+
+            # Make script executable
+            chmod +x /tmp/scripts/setup-redis-vps.sh
+
+            # Run migration script
+            /tmp/scripts/setup-redis-vps.sh
+
+            # Cleanup
+            rm -rf /tmp/scripts
+
+            echo ""
+            echo "✅ Migration complete!"
+
+      - name: Migration Summary
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Redis migration successful!"
+            echo ""
+            echo "Changes:"
+            echo "  • Redis installed on VPS"
+            echo "  • Running on localhost:6379"
+            echo "  • Auto-start enabled"
+            echo "  • Backend configured to use local Redis"
+            echo "  • Service restarted"
+            echo ""
+            echo "Next: Test the application to verify everything works!"
+          else
+            echo "❌ Redis migration failed!"
+            echo "Check logs above for errors"
+            exit 1
+          fi

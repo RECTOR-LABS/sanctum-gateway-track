@@ -125,6 +125,10 @@ grep "^REDIS_URL=" .env
 echo ""
 echo "♻️  Step 6: Restarting backend service..."
 
+# Load NVM to access PM2
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
 pm2 restart sanctum-backend
 
 # Wait for restart
@@ -144,6 +148,10 @@ fi
 # ============================================
 echo ""
 echo "✅ Step 7: Verifying migration..."
+
+# Load NVM (in case it's not loaded)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
 # Show PM2 status
 echo ""

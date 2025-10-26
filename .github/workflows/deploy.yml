@@ -8,15 +8,100 @@ on:
   workflow_dispatch:  # Allow manual trigger
 
 jobs:
-  deploy:
-    name: Deploy to Production VPS
+  build-and-deploy:
+    name: Build and Deploy to Production VPS
     runs-on: ubuntu-latest
 
     steps:
+      # ============================================
+      # Step 1: Checkout code
+      # ============================================
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to VPS via SSH
+      # ============================================
+      # Step 2: Setup Node.js
+      # ============================================
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: |
+            src/backend/package-lock.json
+            src/frontend/package-lock.json
+
+      # ============================================
+      # Step 3: Build Backend (if fails, stops here)
+      # ============================================
+      - name: Build Backend
+        run: |
+          echo "🔧 Building backend..."
+          cd src/backend
+          npm ci --production=false
+          npm run build
+          echo "✅ Backend build successful!"
+
+      # ============================================
+      # Step 4: Build Frontend (if fails, stops here)
+      # ============================================
+      - name: Build Frontend
+        run: |
+          echo "🎨 Building frontend..."
+          cd src/frontend
+          npm ci --production=false
+          npm run build
+          echo "✅ Frontend build successful!"
+
+      # ============================================
+      # Step 5: Create deployment artifact
+      # ============================================
+      - name: Create deployment package
+        run: |
+          echo "📦 Creating deployment package..."
+
+          # Create tar.gz with built files
+          tar -czf deployment.tar.gz \
+            src/backend/dist \
+            src/backend/node_modules \
+            src/backend/package.json \
+            src/backend/package-lock.json \
+            src/frontend/.next \
+            src/frontend/node_modules \
+            src/frontend/package.json \
+            src/frontend/package-lock.json \
+            src/frontend/next.config.ts \
+            src/frontend/public
+
+          echo "✅ Deployment package created ($(du -h deployment.tar.gz | cut -f1))"
+
+      # ============================================
+      # Step 6: Upload artifact (1-day retention)
+      # ============================================
+      - name: Upload deployment artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-build-${{ github.sha }}
+          path: deployment.tar.gz
+          retention-days: 1  # Auto-delete after 1 day
+
+      # ============================================
+      # Step 7: Transfer artifact to VPS
+      # ============================================
+      - name: Transfer to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          source: deployment.tar.gz
+          target: /tmp/sanctum-deployment/
+
+      # ============================================
+      # Step 8: Deploy on VPS
+      # ============================================
+      - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -24,31 +109,32 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
           script: |
-            echo "🚀 Starting deployment..."
-
-            # Navigate to project directory
-            cd ~/sanctum-gateway-track
-
-            # Pull latest changes
-            echo "📥 Pulling latest changes from GitHub..."
-            git fetch origin
-            git reset --hard origin/${{ github.ref_name }}
+            echo "🚀 Starting deployment on VPS..."
 
             # Load NVM
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
-            # Deploy Backend
-            echo "🔧 Building backend..."
-            cd src/backend
-            npm ci --production=false
-            npm run build
+            # Navigate to project directory
+            cd ~/sanctum-gateway-track
 
-            # Deploy Frontend
-            echo "🎨 Building frontend..."
-            cd ../frontend
-            npm ci --production=false
-            npm run build
+            # Pull latest changes (for non-build files like .env, configs)
+            echo "📥 Pulling latest changes from GitHub..."
+            git fetch origin
+            git reset --hard origin/${{ github.ref_name }}
+
+            # Extract deployment package
+            echo "📦 Extracting deployment package..."
+            if [ -f /tmp/sanctum-deployment/deployment.tar.gz ]; then
+              tar -xzf /tmp/sanctum-deployment/deployment.tar.gz -C ~/sanctum-gateway-track/
+              echo "✅ Deployment package extracted!"
+
+              # Clean up
+              rm -f /tmp/sanctum-deployment/deployment.tar.gz
+            else
+              echo "❌ Deployment package not found!"
+              exit 1
+            fi
 
             # Restart services
             echo "♻️  Restarting services..."
@@ -62,6 +148,9 @@ jobs:
             echo "✅ Deployment complete!"
             pm2 list
 
+      # ============================================
+      # Step 9: Deployment Status
+      # ============================================
       - name: Deployment Status
         if: always()
         run: |
@@ -69,7 +158,10 @@ jobs:
             echo "✅ Deployment successful!"
             echo "🌐 Frontend: https://sanctum.rectorspace.com"
             echo "🔌 Backend: https://api.sanctum.rectorspace.com"
+            echo "📊 Build Info: https://sanctum.rectorspace.com/api/build-info"
           else
             echo "❌ Deployment failed!"
+            echo "🔍 Check logs above for errors"
+            echo "💡 Production is still running the previous working build"
             exit 1
           fi

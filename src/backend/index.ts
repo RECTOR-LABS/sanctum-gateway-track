@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { createServer } from 'http';
 import { getWebSocketService } from './services/websocket-service.js';
-import { testDatabaseConnection } from './database/config.js';
+import { testDatabaseConnection, connectRedis } from './database/config.js';
 import analyticsRouter from './api/analytics.js';
 import monitorRouter from './api/monitor.js';
 import demoRouter from './api/demoRoutes.js';
@@ -97,6 +97,14 @@ server.listen(PORT, async () => {
     console.log('✓ Database connection verified');
   } else {
     console.warn('⚠️  Database connection failed');
+  }
+
+  // Connect to Redis
+  const redisConnected = await connectRedis();
+  if (redisConnected) {
+    console.log('✓ Redis connection verified');
+  } else {
+    console.warn('⚠️  Redis connection failed (caching disabled)');
   }
 
   console.log('='.repeat(60));

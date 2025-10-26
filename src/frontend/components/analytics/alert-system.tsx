@@ -459,7 +459,7 @@ export function AlertSystem({
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-medium">{alert.title}</div>
                       <div className="text-xs text-muted-foreground">
-                        Resolved {formatTimestamp(alert.created_at)}
+                        Resolved {formatRelativeTime(alert.created_at)}
                       </div>
                     </div>
                   </div>

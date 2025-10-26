@@ -25,12 +25,12 @@ export class DemoService {
     try {
       // Try multiple possible paths (project root or from src/backend)
       const possiblePaths = [
-        path.join(process.cwd(), 'mainnet-wallet.json'),           // Running from project root
-        path.join(process.cwd(), '../../mainnet-wallet.json'),     // Running from src/backend
-        path.join(process.cwd(), '../../../mainnet-wallet.json'),  // Running from src/backend/dist
-        '/home/sanctum/sanctum-gateway-track/mainnet-wallet.json', // Absolute path on VPS
-        path.resolve(__dirname, '../../mainnet-wallet.json'),      // Relative to compiled file
-        path.resolve(__dirname, '../../../mainnet-wallet.json'),   // From dist/backend
+        path.join(process.cwd(), 'mainnet-wallet.json'),             // Running from project root
+        path.join(process.cwd(), '../../mainnet-wallet.json'),       // Running from src/backend
+        '/home/sanctum/sanctum-gateway-track/mainnet-wallet.json',   // Absolute path on VPS (production)
+        path.resolve(__dirname, '../../../../mainnet-wallet.json'),  // From src/backend/dist/backend to project root
+        path.resolve(__dirname, '../../../mainnet-wallet.json'),     // From dist/backend (alternative)
+        path.resolve(__dirname, '../../mainnet-wallet.json'),        // Relative to compiled file
       ];
 
       let walletPath: string | null = null;

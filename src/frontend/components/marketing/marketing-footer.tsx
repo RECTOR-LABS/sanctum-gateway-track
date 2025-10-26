@@ -1,9 +1,26 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Github, Twitter, ExternalLink, Mail, FileText, BarChart3, Zap } from 'lucide-react';
 
+interface BuildInfo {
+  git: {
+    short: string;
+    branch: string;
+  };
+}
+
 export function MarketingFooter() {
+  const [buildInfo, setBuildInfo] = useState<BuildInfo | null>(null);
+
+  useEffect(() => {
+    fetch('/api/build-info')
+      .then((res) => res.json())
+      .then((data) => setBuildInfo(data))
+      .catch(() => setBuildInfo(null));
+  }, []);
+
   return (
     <footer className="border-t bg-background">
       <div className="container mx-auto px-4 py-12 md:py-16">
@@ -195,6 +212,20 @@ export function MarketingFooter() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-sm text-muted-foreground text-center md:text-left">
               © {new Date().getFullYear()} Gateway Insights. Built for Sanctum Gateway Track - Colosseum Cypherpunk Hackathon.
+              {buildInfo && (
+                <span className="ml-2">
+                  •{' '}
+                  <a
+                    href={`https://github.com/RECTOR-LABS/sanctum-gateway-track/commit/${buildInfo.git.short}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-mono text-xs hover:underline"
+                    title={`Branch: ${buildInfo.git.branch}`}
+                  >
+                    {buildInfo.git.short}
+                  </a>
+                </span>
+              )}
             </div>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
               <a

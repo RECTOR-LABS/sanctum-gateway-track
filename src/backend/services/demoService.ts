@@ -34,14 +34,24 @@ export class DemoService {
       ];
 
       let walletPath: string | null = null;
+      console.log('[Demo] Searching for wallet file...');
+      console.log('[Demo] __dirname:', __dirname);
+      console.log('[Demo] process.cwd():', process.cwd());
+
       for (const testPath of possiblePaths) {
+        console.log('[Demo] Testing path:', testPath);
         if (fs.existsSync(testPath)) {
           walletPath = testPath;
+          console.log('[Demo] ✅ Found wallet at:', testPath);
           break;
+        } else {
+          console.log('[Demo] ❌ Not found');
         }
       }
 
       if (!walletPath) {
+        console.error('[Demo] All paths failed. Tested paths:');
+        possiblePaths.forEach((p, i) => console.error(`  ${i + 1}. ${p}`));
         throw new Error('Wallet file not found in any expected location');
       }
 

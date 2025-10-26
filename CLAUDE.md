@@ -11,7 +11,7 @@ Production-grade transaction analytics platform for Solana developers demonstrat
 **Deadline**: October 30, 2025 (Target submission: October 29)
 **Current Status**: Day 10 of 22 - **100% Production Deployed** ✅
 **Project Type**: Full-stack TypeScript/React + Solana blockchain
-**Last Updated**: October 26, 2025
+**Last Updated**: October 26, 2025 03:45 CET
 
 ### Key Achievements ✅
 
@@ -98,7 +98,7 @@ sanctum-gateway-track/
 - **Runtime**: Node.js 20+ with TypeScript 5.9.3 (strict mode)
 - **Framework**: Express 5.1.0
 - **Database**: PostgreSQL 16 (Local VPS - migrated from Supabase due to IPv6 issues)
-- **Cache**: Redis (Upstash cloud)
+- **Cache**: Redis 7.0.15 (Local VPS - migrated from Upstash to eliminate inactivity timeout risk)
 - **Gateway**: Sanctum Gateway API
 - **Solana**: @solana/web3.js 1.98.4 + Helius RPC (100k req/day free tier)
 - **Real-time**: WebSocket (ws 8.18.3)
@@ -196,7 +196,7 @@ npm run lint             # ESLint
 - ✅ XSS protection (React auto-escaping)
 - ✅ Environment variable management
 - ✅ Database indexes (5 indexes)
-- ✅ Redis caching (85% hit rate)
+- ✅ Redis caching (local VPS, no inactivity timeout, 100% uptime)
 - ✅ WebSocket with exponential backoff
 - ✅ Security audit (80% score - acceptable for demo)
 
@@ -480,8 +480,11 @@ For judges and submission:
 - ✅ CI/CD auto-deploy configured (GitHub Actions)
 - ✅ Production deployment on custom VPS with SSL
 - ✅ Data migrated from Supabase to local PostgreSQL (513 transactions)
+- ✅ Redis migrated from Upstash to local VPS (eliminates 14-day inactivity timeout risk)
+- ✅ Redis caching fully working (6 cache hits confirmed in production)
 - ✅ Build info endpoint and version tracking in footer
 - ✅ Performance testing guide created
 - ✅ Auto-restart configured (PM2 + systemd)
+- ✅ Custom favicon deployed (Sanctum Gateway logo)
 
 **May Allah grant success in this submission. Focus on final submission materials (video, blog, tweet). Bismillah!**

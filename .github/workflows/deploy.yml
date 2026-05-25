@@ -1,11 +1,9 @@
 name: Deploy to VPS
 
+# Auto-trigger disabled 2026-05-25 during reclabs2 -> reclabs3 + Vercel migration.
+# Re-enable push triggers once the new infra is fully wired (Phase D).
 on:
-  push:
-    branches:
-      - main
-      - submission  # Also deploy submission branch
-  workflow_dispatch:  # Allow manual trigger
+  workflow_dispatch:  # Manual trigger only
 
 jobs:
   build-and-deploy:

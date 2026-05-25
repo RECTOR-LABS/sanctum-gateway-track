@@ -1,5 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import { createServer } from 'http';
 import { getWebSocketService } from './services/websocket-service.js';
@@ -11,12 +13,53 @@ import demoRouter from './api/demoRoutes.js';
 // Load environment variables
 dotenv.config();
 
+// Fail-fast environment validation
+const requiredEnv = ['DATABASE_URL', 'REDIS_URL', 'GATEWAY_API_KEY', 'SOLANA_RPC_URL'];
+const missingEnv = requiredEnv.filter((key) => !process.env[key]);
+if (missingEnv.length > 0) {
+  console.error(`[Startup] Missing required env vars: ${missingEnv.join(', ')}`);
+  process.exit(1);
+}
+
 const app = express();
 const PORT = process.env.PORT || 3001;
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+// Trust first proxy hop (nginx) so express-rate-limit uses real client IP, not 127.0.0.1
+app.set('trust proxy', 1);
+
+// Security headers. CSP disabled (we serve JSON, not HTML);
+// CORP set to cross-origin so the FE on a different domain can read responses.
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+  })
+);
+
+// CORS: restrict to configured origin in production, allow all in dev
+const corsOrigin = process.env.CORS_ORIGIN;
+if (IS_PRODUCTION && !corsOrigin) {
+  console.error('[Startup] CORS_ORIGIN must be set in production');
+  process.exit(1);
+}
+app.use(
+  cors({
+    origin: corsOrigin ? corsOrigin.split(',').map((o) => o.trim()) : true,
+    credentials: true,
+  })
+);
+
+app.use(express.json({ limit: '1mb' }));
+
+// Rate limiter on /api/* — 100 req/min per IP. Health check + WS upgrade are exempt.
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use('/api', apiLimiter);
 
 // Health check endpoint
 app.get('/health', async (_req, res) => {

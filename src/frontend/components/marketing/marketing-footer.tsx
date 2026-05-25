@@ -8,7 +8,7 @@ interface BuildInfo {
   git: {
     short: string;
     branch: string;
-  };
+  } | null;
 }
 
 export function MarketingFooter() {
@@ -212,7 +212,7 @@ export function MarketingFooter() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-sm text-muted-foreground text-center md:text-left">
               © {new Date().getFullYear()} Gateway Insights. Built for Sanctum Gateway Track - Colosseum Cypherpunk Hackathon.
-              {buildInfo && (
+              {buildInfo?.git && (
                 <span className="ml-2">
                   •{' '}
                   <a

@@ -6,7 +6,7 @@ interface BuildInfo {
   git: {
     short: string;
     branch: string;
-  };
+  } | null;
 }
 
 export function Footer() {
@@ -44,7 +44,7 @@ export function Footer() {
           .
         </p>
 
-        {buildInfo && (
+        {buildInfo?.git && (
           <p className="text-xs text-muted-foreground">
             <a
               href={`https://github.com/RECTOR-LABS/sanctum-gateway-track/commit/${buildInfo.git.short}`}
